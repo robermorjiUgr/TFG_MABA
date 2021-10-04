@@ -1,0 +1,8 @@
+date_init: None
+date_end:  None
+fields_include: None
+#path_data: Data/ASHRAE/ashrae/working-data/train.csv
+group_by_parent: primary_use,meter
+type_dataset: test
+file_input: Data/ASHRAE/ashrae/working-data/test_edu.csv
+output_dir: Data/ASHRAE/ashrae/result/test/

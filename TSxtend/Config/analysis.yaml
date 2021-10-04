@@ -1,0 +1,4 @@
+fields:     WM,DW,N_urgent,urgent,OrderA,OrderB,OrderC,FSector,TrafficOrder,B1,B2,B3,per_F_Sector,per_traffic,per_B1,per_B2,per_B3,per_T_Reg,per_Resto,TOrders,company,Month
+input_dir:  Data/DAILY_FORECASTING/result/train/
+output_dir: Data/DAILY_FORECASTING/result/train/
+

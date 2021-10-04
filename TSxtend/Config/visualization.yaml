@@ -1,0 +1,22 @@
+field_x:    timestamp
+field_y:    meter_reading
+graph:      missing
+_resample:  W
+measures:   air_temperature,cloud_coverage,dew_temperature,precip_depth_1_hr,sea_level_pressure,wind_direction,wind_speed,meter_reading
+input_dir:  Data/ASHRAE/ashrae/results/train/
+timeseries: False
+
+# air_temperature,cloud_coverage,dew_temperature,precip_depth_1_hr,
+# sea_level_pressure,wind_direction,wind_speed,meter_reading
+
+# 'WM', 'DW', 'N_urgent', 'urgent', 'OrderA', 'OrderB', 'OrderC',
+# 'per_N_urgent', 'per_Urgent', 'per_OrderA', 'per_OrderB', 'per_OrderC',
+# 'FSector', 'TrafficOrder', 'B1', 'B2', 'B3', 'per_F_Sector', 'per_traffic',
+# 'per_B1', 'per_B2', 'per_B3', 'per_T_Reg', 'per_Resto', 'TOrders',
+# 'company', 'Month']
+
+#  'net_manager', 'purchase_area', 'street', 'zipcode_from',
+#  'zipcode_to', 'city', 'num_connections', 'delivery_perc',
+#  'perc_of_active_connections', 'type_conn_perc', 'type_of_connection',
+#  'annual_consume', 'annual_consume_lowtarif_perc', 'smartmeter_perc',
+#  'year'

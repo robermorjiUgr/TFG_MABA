@@ -1,0 +1,27 @@
+site_name: TSxtend
+site_url: http://ugritlab.github.io/TSxtend
+
+repo_url: https://github.com/ugritlab/TSxtend
+repo_name: GitHub
+
+markdown_extensions:
+  - tables
+  - fenced_code
+#  - mdx_math:
+#      enable_dollar_delimiter: True #for use of inline $..$
+extra_javascript:
+  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML
+  - mathjaxhelper.js
+extra_css:
+  - cinder/css/base.css
+  - cinder/css/bootstrap-custom.css
+  - cinder/css/bootstrap-custom.min.css
+  - cinder/css/cinder.css
+  - cinder/css/font-awesome-4.0.3.css
+  - cinder/css/highlight.css
+
+nav:
+- Home: index.md
+- About:
+  - Citing TSxtend: about.md
+

@@ -1,0 +1,45 @@
+name: conda-tsxtend
+channels:
+  - conda-forge
+  - defaults
+  - mro
+dependencies:
+  - jupyterlab=0.35.*
+  - matplotlib=3.0.*
+  - pandas=0.24.*
+  - python=3.7.*
+  - beautifulsoup4
+  - python=3.7.*
+  - psycopg2=2.8.*
+  - requests=2.21.*
+  - pymongo=3.7.*
+  - pytest=4.4.*
+  - scikit-learn=0.20.*
+  - scipy=1.2.*
+  - seaborn=0.9.*
+  - statsmodels=0.9.*
+  - flake8=3.7.*
+  - openpyxl=2.6.*
+  - pip=20.0.*
+  - cudatoolkit=10.1
+  - cudnn
+  - cupti=10.1
+  
+    # - mpi4py=3.0 # installs cuda-aware openmpi
+  # - nccl=2.4
+  # - tensorflow-gpu=2.1 # installs tensorflow=2.1=gpu_py37h7a4bb67_0
+  - pip:
+      - pycryptodomex==3.8.1
+      - pytest-mpl==0.10.*
+      - pytest-cov==2.6.*
+      - ipdb==0.13.3
+      - mlflow==1.11.*
+      - scikit-learn
+      - impyute
+      - missingno
+      - bokeh
+      - lightgbm
+      - tensorflow
+      - keras
+      - xgboost
+      - catboost

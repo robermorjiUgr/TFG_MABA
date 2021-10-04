@@ -1,0 +1,3 @@
+fields_include: air_temperature,cloud_coverage,dew_temperature,precip_depth_1_hr,sea_level_pressure,wind_direction,wind_speed
+input_dir: Data/ASHRAE/ashrae/result/test/
+alg_fs: visualization

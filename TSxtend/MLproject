@@ -1,0 +1,220 @@
+name: conda-tsxtend
+
+conda_env: conda.yaml
+
+entry_points:
+  
+  analysis_data:
+    parameters:
+      fields:  {type:str, default=None}
+      input_dir: {type:str, default=None}
+      output_dir: {type:str, default=None}
+      
+    command:
+      "python3 analysis.py --fields {fields} --input_dir {input_dir} --output_dir {output_dir}"
+  
+  visualization_data:
+    parameters:
+      field_x:  {type:str, default=None}
+      field_y:  {type:str, default=None}
+      graph:    {type:str, default=None}
+      measures: {type:str, default=None} 
+      _resample: {type:str, default=None} 
+      input_dir: {type:str, default=None}
+      
+    command:
+      "python3 visualization.py --field_x {field_x} --field_y {field_y} --graph {graph}
+      --input_dir {input_dir} --measures {measures} --_resample {_resample}"
+
+  partitionDF:
+    parameters:
+        n_rows:    {type:float, default=0.0}
+        date_init: {type:str, default="2016-01-01"}
+        date_end:  {type:str, default="2016-12-31"}      
+        fields_include: {type:str, default=None}
+        group_by_parent: {type:str, default=None}
+        type_dataset: {type:str, default=""}
+        output_dir: {type:str, default="output/"}
+        file_input:  {type:str, default=""}
+
+    command: "python3 partitionDF.py  --date_init {date_init} --date_end {date_end} --file_input {file_input}
+    --n_rows {n_rows} --fields_include {fields_include} --group_by_parent {group_by_parent}  
+    --output_dir {output_dir} --type_dataset {type_dataset}"
+
+  missing_values:
+    parameters: 
+        fields_include:  {type:str, default=None}
+        input_dir:  {type:str, default=None}
+        alg_missing:  {type:str, default="interpolate"}
+    command: "python3 missing_values.py --alg_missing {alg_missing} --fields_include {fields_include} --input_dir {input_dir}"
+
+  outliers:
+    parameters: 
+        fields_include:  {type:str, default=None}
+        q1:  {type:float, default=0.25}
+        q3:  {type:float, default=0.75}
+        alg_outliers:  {type:str, default="z_score_method_mean"}
+        input_dir: {type:str, default=None}
+    command: 
+        "python3 outliers.py --fields_include {fields_include} --q1 {q1} --q3 {q3} 
+         --alg_outliers {alg_outliers} --input_dir {input_dir}"
+  
+  feature_selection:
+    parameters:
+        fields_include: {type:str, default=None}
+        input_dir: {type:str, default=None}
+        alg_fs: {type:str, default="FSMeasures"}
+    command:
+        "python3 feature_selection.py --fields_include {fields_include} --input_dir {input_dir} 
+        --alg_fs {alg_fs}"
+
+  xgb:
+    parameters:
+      n_splits: {type:float, default=10}       
+      objective: {type:str, default="reg:squarederror"}
+      model_input: {type:str, default=None}
+      model_output: {type:str, default=None}
+      input_dir_train: {type:str, default=None}
+      input_dir_test: {type:str, default=None}
+      output_dir: {type:str, default=None}
+      
+    command: 
+      "python3 xgb.py --n_splits {n_splits} --objective {objective}
+       --model_input {model_input} --model_output {model_output} --input_dir_train {input_dir_train}
+       --input_dir_test {input_dir_test} --output_dir {output_dir}"
+
+  rf_regressor:
+    parameters:
+      n_estimators: {type:float, default=10} 
+      criterion: {type=str, default='mse', help="criterion"}
+      max_depth: {type=int, default=1, help="max_depth"}
+      min_samples_split: {type=int, default=2, help="min_samples_split"}
+      min_samples_leaf: {type=int, default=1, help="min_samples_leaf"}
+      min_weight_fraction_leaf: {type=float, default=0., help="min_weight_fraction_leaf"}
+      max_features: {type=str, default="auto", help="max_features"}
+      max_leaf_nodes: { type=int, default=2, help="max_leaf_nodes"}
+      min_impurity_decrease: {type=float, default=0., help="min_impurity_decrease"}
+      bootstrap: {type=str, default=True, help="bootstrap"}
+      oob_score: {type=str, default=False, help="oob_score}
+      n_jobs: {type=int, default=-1, help="n_jobs"}
+      random_state: {type=int, default=0, help="random_state"}
+      warm_start: {type=str, default=False, help="warm_start"}
+      ccp_alpha: {type=float, default=0.0, help="ccp_alpha"}
+      max_samples: {type=str, default=None,help="max_samples"}
+      figure: {type=str, default=False, help="figure"}
+      model_input: {type:str, default=None}
+      model_output: {type:str, default=None}
+    command:
+      "python3 rf_regressor.py  --n_estimators {n_estimators} --criterion {criterion} --max_depth {max_depth} 
+      --min_samples_split {min_samples_split} --min_samples_leaf {min_samples_leaf} --min_weight_fraction_leaf {min_weight_fraction_leaf} 
+      --max_features {max_features} --max_leaf_nodes {max_leaf_nodes} --min_impurity_decrease {min_impurity_decrease} 
+      --bootstrap {bootstrap} --oob_score {oob_score} --n_jobs {n_jobs} 
+      --random_state {random_state} --warm_start {warm_start} --ccp_alpha {ccp_alpha} --max_samples {max_samples}
+      --figure {figure}  --model_input {model_input} --model_output {model_output}"
+  
+  dtree_regressor:
+    parameters:
+      max_depth: {type=int, default=1, help="max_depth"}
+      criterion: {type=str, default='mse', help="criterion"}
+      splitter: {type=str, default='best', help="splitter"}
+      min_samples_split: {type=int, default=2, help="min_samples_split"}
+      min_samples_leaf: {type=int, default=1, help="min_samples_leaf"}
+      min_weight_fraction_leaf: {type=float, default=0., help="min_weight_fraction_leaf"}
+      max_features: {type=str, default="auto", help="max_features"}
+      random_state: {type=int, default=0, help="random_state"}
+      max_leaf_nodes: { type=int, default=2, help="max_leaf_nodes"}
+      figure: {type=str, default=False, help="figure"}
+      model_input: {type:str, default=None}
+      model_output: {type:str, default=None}
+    command:
+      "python3 dtree_regressor.py  --splitter {splitter} --criterion {criterion} --max_depth {max_depth} 
+      --min_samples_split {min_samples_split} --min_samples_leaf {min_samples_leaf} --min_weight_fraction_leaf {min_weight_fraction_leaf} 
+      --max_features {max_features}  --random_state {random_state} --max_leaf_nodes {max_leaf_nodes} --figure {figure}
+      --model_input {model_input} --model_output {model_output}"
+
+  catboost:
+    parameters:
+      loss_function: {type=int, default=1, help="loss_function"}
+      eval_metric: {type=str, default='mse', help="criterion"}
+      task_type: {type=str, default='best', help="task_type"}
+      learning_rate: {type=int, default=2, help="learning_rate"}
+      iterations: {type=int, default=1, help="iterations"}
+      l2_leaf_reg: {type=float, default=0., help="l2_leaf_reg"}
+      random_seed: {type=int, default=42, help="random_seed" }
+      od_type: {type=str, default="auto", help="od_type"}
+      depth: {type=int, default=0, help="depth"}
+      early_stopping_rounds: { type=int, default=2, help="early_stopping_rounds"}
+      border_count: { type=int, default=2, help="border_count"}
+      figure: {type=str, default=False, help="figure"}
+
+    command:
+      "python3 cboost.py  --loss_function {loss_function} --eval_metric {eval_metric} --task_type {task_type} 
+      --learning_rate {learning_rate} --iterations {iterations} --l2_leaf_reg {l2_leaf_reg} 
+      --od_type {od_type}  --random_seed {random_seed} --depth {depth} --early_stopping_rounds {early_stopping_rounds} --border_count {border_count}
+      --figure {figure}"
+  cnn:
+    parameters:      
+      n_steps: { type:float, default=3 }
+      n_features: { type:float, default=3 }
+      conv_filters: { type:float, default=64 }
+      conv_kernel_size: { type:float, default=2 }
+      pool_size: { type:float, default=2 }
+      hidden_units: { type:float, default=50 }
+      epochs: { type:float, default=10 }
+      batch_size: { type:float, default=7 }
+      verbose: { type:float, default=1 }
+      model_input: {type:str, default=None}
+      model_output: {type:str, default=None}
+
+    command: "python3 cnn.py  --n_steps {n_steps} 
+      --conv_filters {conv_filters} --n_features {n_features} --conv_kernel_size {conv_kernel_size} 
+      --pool_size {pool_size} --hidden_units {hidden_units} --epochs {epochs} --batch_size {batch_size} 
+      --verbose {verbose}   --model_input {model_input} --model_output {model_output}"
+
+  lstm:
+    parameters:
+      n_steps: { type:float, default=3 }
+      hidden_units: { type:float, default=50 }
+      epochs: { type:float, default=10 }
+      batch_size: { type:float, default=7 }
+      verbose: { type:float, default=1 }
+      model_input: {type:str, default=None}
+      model_output: {type:str, default=None}
+    
+    command: "python3 lstm.py  --n_steps {n_steps} 
+    --hidden_units {hidden_units} --epochs {epochs} --batch_size {batch_size} --verbose {verbose}
+     --model_input {model_input} --model_output {model_output}"
+  
+  mlp:
+    parameters:
+      n_steps: { type:float, default=3 }
+      hidden_units: { type:float, default=50 }
+      epochs: { type:float, default=10 }
+      batch_size: { type:float, default=7 }
+      verbose: { type:float, default=1 }
+      model_input: {type:str, default=None}
+      model_output: {type:str, default=None}
+    
+    command: "python3 mlp.py --n_steps {n_steps}
+    --hidden_units {hidden_units} --epochs {epochs} --batch_size {batch_size} --verbose {verbose}
+    --model_input {model_input} --model_output {model_output}"
+  
+  mlp_headed:
+    parameters:
+      n_steps: { type:float, default=3 }
+      hidden_units: { type:float, default=50 }
+      epochs: { type:float, default=10 }
+      batch_size: { type:float, default=7 }
+      verbose: { type:float, default=1 }
+      model_input: {type:str, default=None}
+      model_output: {type:str, default=None}
+
+    command: "python3 mlp_headed.py  --n_steps {n_steps}
+    --hidden_units {hidden_units} --epochs {epochs} --batch_size {batch_size} 
+    --verbose {verbose} --model_input {model_input} --model_output {model_output}"
+
+  main:
+    command: "python3 main.py"
+    
+  
+ 

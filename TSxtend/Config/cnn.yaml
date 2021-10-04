@@ -1,0 +1,14 @@
+model_input:                per_F_Sector ,per_traffic ,per_B1 ,per_B2 ,per_B3 ,per_T_Reg ,per_Resto
+model_output:               TOrders
+input_dir_train:            Data/DAILY_FORECASTING/train/
+input_dir_test:             Data/DAILY_FORECASTING/test/
+output_dir:                 Data/DAILY_FORECASTING/result/cnn/
+n_steps:                    4
+n_features:                 12
+conv_filters:               32
+conv_kernel_size:           2
+pool_size:                  2
+hidden_units:               50
+epochs:                     10
+batch_size:                 8
+verbose:                    1

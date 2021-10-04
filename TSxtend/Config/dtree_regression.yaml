@@ -1,0 +1,16 @@
+model_input:                per_F_Sector ,per_traffic ,per_B1 ,per_B2 ,per_B3 ,per_T_Reg ,per_Resto
+model_output:               TOrders
+input_dir_train:            Data/DAILY_FORECASTING/train/
+input_dir_test:             Data/DAILY_FORECASTING/test/
+output_dir:                 Data/DAILY_FORECASTING/result/dtree_regression/
+max_depth:                  5
+criterion:                  mse
+splitter:                   best
+min_samples_split:          2
+min_samples_leaf:           1
+min_weight_fraction_leaf:   0.0
+max_features:               auto
+max_leaf_nodes:             10
+random_state:               0
+figure:                     False
+n_splits:                   10
