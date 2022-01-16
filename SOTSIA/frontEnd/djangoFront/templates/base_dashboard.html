@@ -1,40 +1,58 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard{% endblock %}
-
 {% block content %}
     <aside class="dashboard-nav">
         <div class="dash-logo">
-            <a href="/" class="logo">SOTSIA</a>
+            <a href="/" class="logo-link">SoTSIA</a>
         </div>
         <div class="dash-menu">
             <ul class="dash-menu-links">
-                <li class="dash-menu-item">
-                    <a href="#" class="dash-link">Testing</a>
+                <li class="dash-menu-item active">
+                    <a href="#" class="dash-link">
+                        <i class="fas fa-vial"></i>
+                        Testing
+                    </a>
                 </li>
                 <li class="dash-menu-item">
-                    <a href="#" class="dash-link">Dataset</a>
+                    <a href="#" class="dash-link">
+                        <i class="fas fa-database"></i>
+                        Dataset
+                    </a>
                 </li>
                 <li class="dash-menu-item">
-                    <a href="#" class="dash-link">Reports</a>
+                    <a href="#" class="dash-link">
+                        <i class="fas fa-folder-open"></i>
+                        Reports
+                    </a>
                 </li>
                 <li class="dash-menu-item">
-                    <a href="#" class="dash-link">Deep Learning</a>
+                    <a href="#" class="dash-link">
+                        <i class="fas fa-square"></i>
+                        Deep Learning
+                    </a>
                 </li>
                 <li class="dash-menu-item">
-                    <a href="#" class="dash-link">Machine Learning</a>
+                    <a href="#" class="dash-link">
+                        <i class="fas fa-square"></i>
+                        Machine Learning
+                    </a>
                 </li>
                 <li class="dash-menu-item">
-                    <a href="#" class="dash-link">Data Mining</a>
+                    <a href="#" class="dash-link">
+                        <i class="fas fa-square"></i>
+                        Data Mining
+                    </a>
                 </li>
             </ul>
-        </div>
-        <div class="dash-sign-out">
-            <a href="sign-out" class="dash-link">Sign out</a>
+            <div class="dash-sign-out">
+                <a href="sign-out" class="dash-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sign Out
+                </a>
+            </div>
         </div>
     </aside>
     <main class="dashboard-content">
-        <h1>This is a dashboard template</h1>
         {% block content_dash %}{% endblock %}
     </main>
 {% endblock %}
