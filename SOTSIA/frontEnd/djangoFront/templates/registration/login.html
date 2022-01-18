@@ -1,26 +1,25 @@
-{% extends "base.html" %}
+{% extends "registration/registration_base.html" %}
 
 {% block title %}Sign In - SOTSIA{% endblock %}
 
-{% block content %}
-    <section class="sign-in">
-        <div class="sign-box">
-            <h1 class="sign-form-title">Sign In</h1>
-            <form class="sign-form" method="post">
-                {% csrf_token %}
-                <div class="sign-form-item">
-                    <span class="sign-form-label">Username</span>
-                    {{ form.username }}
-                </div>
-                <div class="sign-form-item">
-                    <span class="sign-form-label">Password</span>
-                    {{ form.password }}
-                </div>
-                <div class="sign-form-submit">
-                    <button class="sign-in-btn" type="submit">Sign In</button>
-                    <a href="#" class="sign-in-reset">Forgot Password?</a>
-                </div>
-            </form>
+{% block heading %}Sign In{% endblock %}
+
+{% block content_sign_box %}
+    <form class="sign-form" method="post">
+        {% csrf_token %}
+        <div class="sign-form-item">
+            <span class="sign-form-label">Username</span>
+            {{ form.username }}
         </div>
-    </section>
+        <div class="sign-form-item">
+            <span class="sign-form-label">Password</span>
+            {{ form.password }}
+        </div>
+        <div class="sign-form-submit">
+            <button class="sign-in-btn" type="submit">Sign In</button>
+            <div class="password-reset">
+                <a href="/sotsia/password_reset" class="password-reset-link">Forgot Password?</a>
+            </div>
+        </div>
+    </form>
 {% endblock %}
