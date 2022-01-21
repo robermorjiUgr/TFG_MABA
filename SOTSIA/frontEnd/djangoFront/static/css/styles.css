@@ -172,3 +172,7 @@ body {
 .sign-form-text {
     color: var(--light-gray);
 }
+
+.home-page, .testing-page {
+    padding-top: 100px;
+}

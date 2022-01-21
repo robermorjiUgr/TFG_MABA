@@ -1,58 +1,66 @@
 {% extends "base.html" %}
 
+
 {% block content %}
-    <aside class="dashboard-nav">
-        <div class="dash-logo">
-            <a href="/" class="logo-link">SoTSIA</a>
-        </div>
-        <div class="dash-menu">
-            <ul class="dash-menu-links">
-                <li class="dash-menu-item active">
-                    <a href="#" class="dash-link">
-                        <i class="fas fa-vial"></i>
-                        Testing
-                    </a>
-                </li>
-                <li class="dash-menu-item">
-                    <a href="#" class="dash-link">
-                        <i class="fas fa-database"></i>
-                        Dataset
-                    </a>
-                </li>
-                <li class="dash-menu-item">
-                    <a href="#" class="dash-link">
-                        <i class="fas fa-folder-open"></i>
-                        Reports
-                    </a>
-                </li>
-                <li class="dash-menu-item">
-                    <a href="#" class="dash-link">
-                        <i class="fas fa-square"></i>
-                        Deep Learning
-                    </a>
-                </li>
-                <li class="dash-menu-item">
-                    <a href="#" class="dash-link">
-                        <i class="fas fa-square"></i>
-                        Machine Learning
-                    </a>
-                </li>
-                <li class="dash-menu-item">
-                    <a href="#" class="dash-link">
-                        <i class="fas fa-square"></i>
-                        Data Mining
-                    </a>
-                </li>
-            </ul>
-            <div class="dash-sign-out">
-                <a href="sign-out" class="dash-link">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Sign Out
-                </a>
+    {% if user.is_authenticated %}
+        <aside class="dashboard-nav">
+            <div class="dash-logo">
+                <a href="/" class="logo-link">SoTSIA</a>
             </div>
-        </div>
-    </aside>
-    <main class="dashboard-content">
-        {% block content_dash %}{% endblock %}
-    </main>
+            <div class="dash-menu">
+                <ul class="dash-menu-links">
+                    <li class="dash-menu-item active">
+                        <a href="#" class="dash-link">
+                            <i class="fas fa-vial"></i>
+                            Testing
+                        </a>
+                    </li>
+                    <li class="dash-menu-item">
+                        <a href="#" class="dash-link">
+                            <i class="fas fa-database"></i>
+                            Dataset
+                        </a>
+                    </li>
+                    <li class="dash-menu-item">
+                        <a href="#" class="dash-link">
+                            <i class="fas fa-folder-open"></i>
+                            Reports
+                        </a>
+                    </li>
+                    <li class="dash-menu-item">
+                        <a href="#" class="dash-link">
+                            <i class="fas fa-square"></i>
+                            Deep Learning
+                        </a>
+                    </li>
+                    <li class="dash-menu-item">
+                        <a href="#" class="dash-link">
+                            <i class="fas fa-square"></i>
+                            Machine Learning
+                        </a>
+                    </li>
+                    <li class="dash-menu-item">
+                        <a href="#" class="dash-link">
+                            <i class="fas fa-square"></i>
+                            Data Mining
+                        </a>
+                    </li>
+                </ul>
+                <div class="dash-sign-out">
+                    <a href="{% url 'logout' %}" class="dash-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                </div>
+            </div>
+        </aside>
+        <main class="dashboard-content">
+            {% block content_dash %}{% endblock %}
+        </main>
+    {% else %}
+        <main class="dashboard-content">
+            <h1>Error</h1>
+            <p>You must <a href="{% url 'login' %}" class="dash-link">sign in</a> to be able to see the Testing Area</p>
+        </main>
+    {% endif %}
 {% endblock %}
