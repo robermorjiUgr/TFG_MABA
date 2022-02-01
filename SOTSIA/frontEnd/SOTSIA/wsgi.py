@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangoSOTSIA.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SOTSIA.settings')
 
 application = get_wsgi_application()

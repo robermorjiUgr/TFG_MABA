@@ -1,1 +1,4 @@
 django
+IPython
+ipdb
+requests

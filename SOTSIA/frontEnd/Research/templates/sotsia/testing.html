@@ -4,11 +4,20 @@
 
 {% block content_dash %}
     <section class="testing-page">
-        <h1>Testing</h1>
+        <h1>Testing </h1>
         {% if user.is_authenticated %}
             <h2>Authenticated</h2>
         {% else %}
             <h2>Please sign in</h2>
         {% endif %}
+        <!-- Select name BBDD in forms -->
+        <select class="selectpicker">
+            {% for dbName in database_name %}
+                <option>{{dbName}}</option>
+            {% endfor %}
+           
+            
+          </select>
+        {{data}}
     </section>
 {% endblock %}
