@@ -1,13 +1,13 @@
 :root {
     --primary-color: #12192F;
     --secondary-color: #0088CC;
-    --gray: #666666;
-    --light-gray: #EEEEEE;
+    --grey: #666666;
+    --light-grey: #EEEEEE;
     --white: #FFFFFF;
 }
 
 *{
-    font-family: 'Montserrat';
+    font-family: "Montserrat", sans-serif;
     font-size: 16px;
 }
 
@@ -34,7 +34,7 @@ body {
 .navbar {
     position: absolute;
     top: 0;
-    height: 80px;
+    height: 90px;
     background-color: #69686860;
     width: 100%;
     display: flex;
@@ -47,6 +47,11 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    padding: 1.5rem;
+}
+
+.hidden {
+    display: none;
 }
 
 .logo {
@@ -55,9 +60,13 @@ body {
 
 .logo-title {
     text-decoration: none;
-    color: var(--light-gray);
+    color: var(--light-grey);
     font-size: 1.375rem;
     font-weight: bold;
+}
+
+.menu-icon-toggle {
+    display: none;
 }
 
 .menu {
@@ -76,7 +85,7 @@ body {
 
 .menu-link {
     text-decoration: none;
-    color: var(--light-gray);
+    color: var(--light-grey);
     font-size: 1.125rem;
 }
 
@@ -170,9 +179,9 @@ body {
 }
 
 .sign-form-text {
-    color: var(--light-gray);
+    color: var(--light-grey);
 }
 
-.home-page, .testing-page {
+.home-page, .dashboard-content {
     padding-top: 100px;
 }

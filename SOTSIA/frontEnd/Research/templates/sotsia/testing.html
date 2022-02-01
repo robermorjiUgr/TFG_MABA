@@ -1,23 +1,346 @@
 {% extends "base_dashboard.html" %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Testing{% endblock %}
+
+{% block dash_item_testing %}active{% endblock dash_item_testing %}
 
 {% block content_dash %}
     <section class="testing-page">
-        <h1>Testing </h1>
-        {% if user.is_authenticated %}
-            <h2>Authenticated</h2>
-        {% else %}
-            <h2>Please sign in</h2>
-        {% endif %}
-        <!-- Select name BBDD in forms -->
-        <select class="selectpicker">
-            {% for dbName in database_name %}
-                <option>{{dbName}}</option>
-            {% endfor %}
-           
-            
-          </select>
-        {{data}}
+        <h1>Testing</h1>
+        <select class="testing-db-selector" name="select_database">
+            <option class="db-selector-item" hidden>Select a Database</option>
+            <option class="db-selector-item" selected value="database1">Resources and Energy</option>
+            <option class="db-selector-item" value="database2">Database 2</option>
+            <option class="db-selector-item" value="database3">Database 3</option>
+        </select>
+        <div class="testing-cards">
+            <div class="card-item">
+                <div class="card-info">
+                    <div class="card-text">
+                        <h2 class="card-title">Capacity</h2>
+                        <span class="card-value">100GB</span>
+                    </div>
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="card-improve">
+                    <i class="fas fa-arrow-up"></i>
+                    <span class="card-percentage">10%</span>
+                    <p class="card-percentage-timestamp">Since last week</p>
+                </div>
+            </div>
+            <div class="card-item">
+                <div class="card-info">
+                    <div class="card-text">
+                        <h2 class="card-title">Experiments</h2>
+                        <span class="card-value">76</span>
+                    </div>
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <div class="card-improve">
+                    <i class="fas fa-arrow-up"></i>
+                    <span class="card-percentage">16%</span>
+                    <p class="card-percentage-timestamp">Since last week</p>
+                </div>
+            </div>
+            <div class="card-item">
+                <div class="card-info">
+                    <div class="card-text">
+                        <h2 class="card-title">Scientists</h2>
+                        <span class="card-value">22</span>
+                    </div>
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="card-worsen">
+                    <i class="fas fa-arrow-down"></i>
+                    <span class="card-percentage">5%</span>
+                    <p class="card-percentage-timestamp">Since last week</p>
+                </div>
+            </div>
+            <div class="card-item">
+                <div class="card-info">
+                    <div class="card-text">
+                        <h2 class="card-title">Datasets</h2>
+                        <span class="card-value">54</span>
+                    </div>
+                    <i class="fab fa-whmcs"></i>
+                </div>
+                <div class="card-improve">
+                    <i class="fas fa-arrow-up"></i>
+                    <span class="card-percentage">13%</span>
+                    <p class="card-percentage-timestamp">Since last week</p>
+                </div>
+            </div>
+        </div>
+        <div class="charts-container">
+            <div class="chart-item" id="chart-1">
+                <div class="chart-info">
+                    <div class="chart-name">
+                        <span class="chart-group-type">Overview</span>
+                        <h2 class="chart-title">Experiments</h2>
+                    </div>
+                    <div class="chart-btns">
+                        <button class="chart-btn active">Month</button>
+                        <button class="chart-btn">Week</button>
+                    </div>
+                </div>
+                <canvas class="chart-canvas" id="experiments-bars"></canvas>
+            </div>
+            <div class="chart-item" id="chart-2">
+                <div class="chart-info">
+                    <div class="chart-name">
+                        <span class="chart-group-type">Performance</span>
+                        <h2 class="chart-title">Total experiments</h2>
+                    </div>
+                </div>
+                <div class="legend-container--small" id="legend-container-2"></div>
+                <canvas class="chart-canvas" id="experiments-total" width="300px" height="300px"></canvas>
+            </div>
+            <div class="chart-item" id="chart-3">
+                <div class="chart-info">
+                    <div class="chart-name">
+                        <span class="chart-group-type">Overview</span>
+                        <h2 class="chart-title">Use of algorithms</h2>
+                    </div>
+                    <div class="chart-btns">
+                        <button class="chart-btn active">Month</button>
+                        <button class="chart-btn">Week</button>
+                    </div>
+                </div>
+                <div class="legend-container" id="legend-container"></div>
+                <canvas class="chart-canvas" id="use-algorithms"></canvas>
+            </div>
+            <div class="chart-item" id="chart-4">
+                <div class="chart-info">
+                    <div class="chart-name">
+                        <span class="chart-group-type">Performance</span>
+                        <h2 class="chart-title">Use of database</h2>
+                    </div>
+                </div>
+                <canvas class="chart-canvas" id="use-database"></canvas>
+            </div>
+        </div>
     </section>
+
+    <script>
+        // Labels for the months of the year 
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    
+        // Labels with HTML
+        const getOrCreateLegendList = (chart, id) => {
+            const legendContainer = document.getElementById(id);
+            let listContainer = legendContainer.querySelector('ul');
+
+            if (!listContainer) {
+                listContainer = document.createElement('ul');
+                listContainer.className = "legend-list";
+
+                legendContainer.appendChild(listContainer);
+            }
+
+            return listContainer;
+        };
+
+        const htmlLegendPlugin = {
+            id: 'htmlLegend',
+            afterUpdate(chart, args, options) {
+
+                const ul = getOrCreateLegendList(chart, args.containerID);
+
+                // Remove old legend items
+                while (ul.firstChild) {
+                    ul.firstChild.remove();
+                }
+
+                // Reuse the built-in legendItems generator
+                const items = chart.options.legend.labels.generateLabels(chart);
+
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'legend-item';
+
+                    li.onclick = () => {
+                        const {type} = chart.config;
+                        if (type === 'pie' || type === 'doughnut') {
+                            // Pie and doughnut charts only have a single dataset and visibility is per item
+                            chart.toggleDataVisibility(item.index);
+                        } else {
+                            chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+                        }
+                        chart.update();
+                    };
+
+                    // Color box
+                    const boxSpan = document.createElement('span');
+                    boxSpan.className = 'legend-item--color-box';
+                    boxSpan.style.background = item.fillStyle;
+                    boxSpan.style.borderColor = item.strokeStyle;
+                    boxSpan.style.borderWidth = item.lineWidth + 'px';
+
+                    // Text
+                    const textContainer = document.createElement('p');
+                    textContainer.className = 'legend-item--text';
+                    textContainer.style.color = item.fontColor;
+                    textContainer.style.textDecoration = item.hidden ? 'line-through' : '';
+
+                    const text = document.createTextNode(item.text);
+                    textContainer.appendChild(text);
+
+                    li.appendChild(boxSpan);
+                    li.appendChild(textContainer);
+                    ul.appendChild(li);
+                });
+            }
+        };
+
+        // First chart
+        const experimentsBars = document.getElementById('experiments-bars').getContext('2d');
+    
+        const experimentsData = {
+            labels: months.slice(0,6),
+            datasets: [
+                {
+                    label: 'Deep Learning',
+                    // data: [13, 14, -25, 12, 5, 2, 1, 3, -65, 45, 75, 21],
+                    data: [13, 14, -25, 12, 5, 2],
+                    borderColor: '#12192F',
+                    backgroundColor: '#12192F',
+                },
+                {
+                    label: 'Machine Learning',
+                    data: [1, 3, -65, 45, 75, 21],
+                    borderColor: '#0088CC',
+                    backgroundColor: '#0088CC',
+                },
+                {
+                    label: 'Data Mining',
+                    data: [12, 5, 2, 1, 3, -65],
+                    borderColor: '#666666',
+                    backgroundColor: '#666666',
+                }
+            ]
+        };
+
+        const experimentsChart = new Chart(experimentsBars, {
+            type: 'bar',
+            data: experimentsData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        //Second chart
+        const experimentsTotalBars = document.getElementById('experiments-total').getContext('2d');
+    
+        const experimentsTotalData = {
+            labels: ['Success', 'Error'],
+            datasets: [
+                {
+                    label: 'Success',
+                    data: [95, 5],
+                    backgroundColor: ['#12192F', '#666666'],
+                }
+            ]
+        };
+
+        const experimentsTotalChart = new Chart(experimentsTotalBars, {
+            type: 'doughnut',
+            data: experimentsTotalData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    htmlLegend: {
+                        // ID of the container to put the legend in
+                        containerID: 'legend-container-2',
+                    },
+                },
+                legend: {
+                    display: false
+                }
+            },
+            plugins: [htmlLegendPlugin]
+        });
+
+        // Third chart
+        const useAlgorithmsBars = document.getElementById('use-algorithms').getContext('2d');
+
+        const useAlgorithmsData = {
+            labels: months.slice(0,6),
+            datasets: [
+                {
+                    label: 'Deep Learning',
+                    // data: [13, 14, -25, 12, 5, 2, 1, 3, -65, 45, 75, 21],
+                    data: [13, 14, -25, 12, 5, 2],
+                    borderColor: '#12192F',
+                    backgroundColor: '#12192F',
+                    fill: false,
+                },
+                {
+                    label: 'Machine Learning',
+                    data: [1, 3, -65, 45, 75, 21],
+                    borderColor: '#0088CC',
+                    backgroundColor: '#0088CC',
+                    fill: false,
+                },
+                {
+                    label: 'Data Mining',
+                    data: [12, 5, 2, 1, 3, -65],
+                    borderColor: '#666666',
+                    backgroundColor: '#666666',
+                    fill: false,
+                }
+            ]
+        };
+
+        const useAlgorithmsChart = new Chart(useAlgorithmsBars, {
+            type: 'line',
+            data: useAlgorithmsData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    htmlLegend: {
+                        // ID of the container to put the legend in
+                        containerID: 'legend-container',
+                    },
+                },
+                legend: {
+                    display: false
+                }
+            },
+            plugins: [htmlLegendPlugin]
+        });
+
+        // Fourth chart
+        const useDatabaseBars = document.getElementById('use-database').getContext('2d');
+
+        const DatabaseData = {
+            labels: months.slice(0,5),
+            datasets: [
+                {
+                    label: 'Resources',
+                    data: [50, 34, 61, 73, 24],
+                    borderColor: '#12192F',
+                    backgroundColor: '#12192F75',
+                }
+            ]
+        };
+
+        const useDatabaseChart = new Chart(useDatabaseBars, {
+            type: 'line',
+            data: DatabaseData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+            }
+        });
+
+        
+    </script>
 {% endblock %}
