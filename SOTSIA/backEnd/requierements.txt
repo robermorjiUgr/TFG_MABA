@@ -1,7 +1,0 @@
-flask
-pandas
-IPython
-ipdb
-Flask-PyMongo
-
-

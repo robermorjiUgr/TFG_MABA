@@ -1,9 +1,12 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required(login_url='/sotsia/login/')
 def home(request):
     return render(request, 'home.html')
 
+@login_required(login_url='/sotsia/login/')
 def testing(request):
     # url = 'http://localhost:5000/dataset/dbName'
     # res = requests.request(method="GET", url=url)
@@ -27,5 +30,6 @@ def testing(request):
     # return render(request, 'sotsia/testing.html', args)
     return render(request, 'sotsia/testing.html')
 
+@login_required(login_url='/sotsia/login/')
 def dataset(request):
     return render(request, 'sotsia/dataset.html')
