@@ -1,0 +1,23 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Dataset{% endblock %}
+
+{% block dash_item_dataset %}active{% endblock dash_item_dataset %}
+
+{% block content_dash %}
+    <section class="dataset-page">
+        <h1>Configure Dataset</h1>
+        <h2>Database</h2>
+        <select class="testing-db-selector" name="select_database">
+            <option class="db-selector-item" hidden>Select a Database</option>
+            <option class="db-selector-item" selected value="database1">Resources and Energy</option>
+            <option class="db-selector-item" value="database2">Database 2</option>
+            <option class="db-selector-item" value="database3">Database 3</option>
+        </select>
+        <form class="dataset-form">
+            <h2>Time Interval</h2>
+            <input class="dataset-form-time" type="datetime">
+        </form>
+        
+    </section>
+{% endblock %}

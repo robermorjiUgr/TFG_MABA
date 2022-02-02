@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-
 {% block content %}
     {% if user.is_authenticated %}
         <aside class="dashboard-nav">
@@ -9,37 +8,37 @@
             </div>
             <div class="dash-menu">
                 <ul class="dash-menu-links">
-                    <li class="dash-menu-item active">
-                        <a href="#" class="dash-link">
+                    <li class="dash-menu-item {% block dash_item_testing %}{% endblock dash_item_testing %}">
+                        <a href="{% url 'testing' %}" class="dash-link">
                             <i class="fas fa-vial"></i>
                             Testing
                         </a>
                     </li>
-                    <li class="dash-menu-item">
-                        <a href="#" class="dash-link">
+                    <li class="dash-menu-item {% block dash_item_dataset %}{% endblock dash_item_dataset %}">
+                        <a href="{% url 'dataset' %}" class="dash-link">
                             <i class="fas fa-database"></i>
                             Dataset
                         </a>
                     </li>
-                    <li class="dash-menu-item">
+                    <li class="dash-menu-item {% block dash_item_reports %}{% endblock dash_item_reports %}">
                         <a href="#" class="dash-link">
                             <i class="fas fa-folder-open"></i>
                             Reports
                         </a>
                     </li>
-                    <li class="dash-menu-item">
+                    <li class="dash-menu-item {% block dash_item_deep_learning %}{% endblock dash_item_deep_learning %}">
                         <a href="#" class="dash-link">
                             <i class="fas fa-square"></i>
                             Deep Learning
                         </a>
                     </li>
-                    <li class="dash-menu-item">
+                    <li class="dash-menu-item {% block dash_item_machine_learning %}{% endblock dash_item_machine_learning %}">
                         <a href="#" class="dash-link">
                             <i class="fas fa-square"></i>
                             Machine Learning
                         </a>
                     </li>
-                    <li class="dash-menu-item">
+                    <li class="dash-menu-item {% block dash_item_data_mining %}{% endblock dash_item_data_mining %}">
                         <a href="#" class="dash-link">
                             <i class="fas fa-square"></i>
                             Data Mining
