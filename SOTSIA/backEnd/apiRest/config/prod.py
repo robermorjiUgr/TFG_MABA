@@ -1,7 +1,7 @@
 from .default import *
 
 APP_ENV           = APP_ENV_DEVELOPMENT
-APP_DEBUG         = True
-APP_TESTING       = True
+APP_DEBUG         = False
+APP_TESTING       = False
 
 CONNECTION_STRING = CONNECT_DATABASE

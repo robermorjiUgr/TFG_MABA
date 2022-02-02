@@ -1,65 +1,34 @@
 from json import JSONEncoder
 from flask import jsonify
 from . import dataset_bp
-import pymongo
-from pymongo import MongoClient
+from app.database.connection import connectionMongo as _mongo
 
 from bson import json_util
 import json
 
-
-
 #Function that get all name database allow access user. 
-def list_name_database():
-    dbs = MongoClient('127.0.0.1:27017',
-                     username='myUserTest',
-                     password='123456',
-                     authMechanism='SCRAM-SHA-256').list_database_names()
-    return dbs
-
-#Function that get first 50 elements from database.
-def get_data(dbName):
-    client = MongoClient('127.0.0.1:27017',
-                     username='myUserTest',
-                     password='123456',
-                     authMechanism='SCRAM-SHA-256')
-    
-    db = client[dbName]
-    collection = db['data']
-    cursor = collection.find({}).limit(50)
-    return cursor
-
-
 @dataset_bp.route('/dbName',methods=['GET'])
 def getNameDataBase():
-    ''''
-    To do: 
-      Conectar  con la Base de Datos de Mongo
-      Traer las bases de datos correspondientes
-      Almacenarlas en una variable
-      Finalmente empaquetarla en un diccionario y enviarlos
-    '''
-    dbs = list_name_database() 
+   
+    # List Name DataBase
+    dbs = _mongo.list_name_database()
     list_dbName = []
-    # To DO:
+    
     for db in dbs:
         database ={db:db}
         list_dbName.append(database)
+
     return jsonify(list_dbName)
 
 
+# Function that list the fifty first elements from a database. 
 @dataset_bp.route('/data',methods=['GET'])
 def getData():
-    ''''
-    To do: 
-      Conectar  con la Base de Datos de Mongo
-      Traer los datos correspondientes de la base de datos seleccionada
-      Almacenarlas en una variable
-      Finalmente empaquetarla en un diccionario y enviarlos
-    '''
-    data = get_data('icpe') 
+    
+    # Get data from selected bbdd. The fifty first elements. 
+    data = _mongo.get_data('icpe') 
     data_db = []
-    # To DO:
+   
     for db in data:
         data_db.append(db)
 
