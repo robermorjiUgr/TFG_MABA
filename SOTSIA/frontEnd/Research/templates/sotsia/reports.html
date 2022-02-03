@@ -1,0 +1,106 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block dash_item_reports %}active{% endblock dash_item_reports %}
+
+{% block content_dash %}
+    <section class="reports-page">
+        <h1>My Reports</h1>
+        <div class="reports-info">
+            <p>List of all the reports of the experiments carried out.</p>
+        </div>
+        <div class="reports-table">
+            <table id="my-reports-table" class="table table-striped">
+                <thead>
+                  <tr class="table-header">
+                    <th class="th-sm">Database</th>
+                    <th class="th-sm">Algorithm</th>
+                    <th class="th-sm">Description</th>
+                    <th class="th-sm">Start Date</th>
+                    <th class="th-sm">Duration</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-row">
+                    <td class="td-sm">Tiger Nixon</td>
+                    <td class="td-sm">System Architect</td>
+                    <td class="td-sm">Edinburgh</td>
+                    <td class="td-sm">61</td>
+                    <td class="td-sm">2011/04/25</td>
+                  </tr>
+                  <tr class="table-row">
+                    <td class="td-sm">Garrett Winters</td>
+                    <td class="td-sm">Accountant</td>
+                    <td class="td-sm">Tokyo</td>
+                    <td class="td-sm">63</td>
+                    <td class="td-sm">2011/07/25</td>
+                  </tr>
+                  <tr class="table-row">
+                    <td class="td-sm">Ashton Cox</td>
+                    <td class="td-sm">Junior Technical Author</td>
+                    <td class="td-sm">San Francisco</td>
+                    <td class="td-sm">66</td>
+                    <td class="td-sm">2009/01/12</td>
+                  </tr>
+                  <tr class="table-row">
+                    <td class="td-sm">Cedric Kelly</td>
+                    <td class="td-sm">Senior Javascript Developer</td>
+                    <td class="td-sm">Edinburgh</td>
+                    <td class="td-sm">22</td>
+                    <td class="td-sm">2012/03/29</td>
+                  </tr>
+                  <tr class="table-row">
+                    <td class="td-sm">Airi Satou</td>
+                    <td class="td-sm">Accountant</td>
+                    <td class="td-sm">Tokyo</td>
+                    <td class="td-sm">33</td>
+                    <td class="td-sm">2008/11/28</td>
+                  </tr>
+                  <tr class="table-row">
+                    <td class="td-sm">Brielle Williamson</td>
+                    <td class="td-sm">Integration Specialist</td>
+                    <td class="td-sm">New York</td>
+                    <td class="td-sm">61</td>
+                    <td class="td-sm">2012/12/02</td>
+                  </tr>
+                  <tr class="table-row">
+                    <td class="td-sm">Herrod Chandler</td>
+                    <td class="td-sm">Sales Assistant</td>
+                    <td class="td-sm">San Francisco</td>
+                    <td class="td-sm">59</td>
+                    <td class="td-sm">2012/08/06</td>
+                  </tr>
+                  <tr class="table-row">
+                    <td class="td-sm">Rhona Davidson</td>
+                    <td class="td-sm">Integration Specialist</td>
+                    <td class="td-sm">Tokyo</td>
+                    <td class="td-sm">55</td>
+                    <td class="td-sm">2010/10/14</td>
+                  </tr>
+                  <tr class="table-row">
+                    <td class="td-sm">Colleen Hurst</td>
+                    <td class="td-sm">Javascript Developer</td>
+                    <td class="td-sm">San Francisco</td>
+                    <td class="td-sm">39</td>
+                    <td class="td-sm">2009/09/15</td>
+                  </tr>
+                  <tr class="table-row">
+                    <td class="td-sm">Sonya Frost</td>
+                    <td class="td-sm">Software Engineer</td>
+                    <td class="td-sm">Edinburgh</td>
+                    <td class="td-sm">23</td>
+                    <td class="td-sm">2008/12/13</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </section>
+
+    <script>
+        $(document).ready(function () {
+            $('#dtBasicExample').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+{% endblock %}

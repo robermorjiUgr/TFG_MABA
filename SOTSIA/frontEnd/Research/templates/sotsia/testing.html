@@ -6,7 +6,7 @@
 
 {% block content_dash %}
     <section class="testing-page">
-        <h1>Testing</h1>
+        <h1>Research</h1>
         <select class="testing-db-selector" name="select_database">
             <option class="db-selector-item" hidden>Select a Database</option>
             <option class="db-selector-item" selected value="database1">Resources and Energy</option>
@@ -83,6 +83,7 @@
                         <button class="chart-btn">Week</button>
                     </div>
                 </div>
+                <div class="legend-container--small" id="legend-container-1"></div>
                 <canvas class="chart-canvas" id="experiments-bars"></canvas>
             </div>
             <div class="chart-item" id="chart-2">
@@ -106,7 +107,7 @@
                         <button class="chart-btn">Week</button>
                     </div>
                 </div>
-                <div class="legend-container" id="legend-container"></div>
+                <div class="legend-container" id="legend-container-3"></div>
                 <canvas class="chart-canvas" id="use-algorithms"></canvas>
             </div>
             <div class="chart-item" id="chart-4">
@@ -116,6 +117,7 @@
                         <h2 class="chart-title">Use of database</h2>
                     </div>
                 </div>
+                <div class="legend-container" id="legend-container-4"></div>
                 <canvas class="chart-canvas" id="use-database"></canvas>
             </div>
         </div>
@@ -226,12 +228,17 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                plugins: {
+                    htmlLegend: {
+                        // ID of the container to put the legend in
+                        containerID: 'legend-container-1',
+                    },
+                },
+                legend: {
+                    display: false
                 }
-            }
+            },
+            plugins: [htmlLegendPlugin]
         });
 
         //Second chart
@@ -307,7 +314,7 @@
                 plugins: {
                     htmlLegend: {
                         // ID of the container to put the legend in
-                        containerID: 'legend-container',
+                        containerID: 'legend-container-3',
                     },
                 },
                 legend: {
@@ -338,7 +345,17 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-            }
+                plugins: {
+                    htmlLegend: {
+                        // ID of the container to put the legend in
+                        containerID: 'legend-container-4',
+                    },
+                },
+                legend: {
+                    display: false
+                }
+            },
+            plugins: [htmlLegendPlugin]
         });
 
         

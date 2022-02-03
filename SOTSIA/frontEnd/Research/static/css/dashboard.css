@@ -1,9 +1,7 @@
 :root {
-    --card-grey: #666666;
     --card-green: #008154;
     --card-red: #AB292C;
-    --card-light-grey: #868686;
-    --chart-btn-inactive: #EEEEEE;
+    --card-grey: #868686;
 }
 
 .dashboard-nav {
@@ -85,7 +83,6 @@
     font-size: 1.375rem;
     font-family: 'Montserrat';
     padding-left: 1.25rem;
-    margin-bottom: 2.5rem;
     border-radius: 1.25rem;
     border-color: #12192F35;
     box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.2);
@@ -100,6 +97,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-top: 2.5rem;
 }
 
 .card-item {
@@ -121,7 +119,7 @@
 .card-title {
     font-size: 1.25rem;
     font-weight: 300;
-    color: var(--card-grey);
+    color: var(--grey);
 }
 
 .card-value {
@@ -142,7 +140,7 @@
     align-items: center;
     width: 100%;
     padding-top: 0.75rem;
-    border-top: 1px solid var(--card-light-grey);
+    border-top: 1px solid var(--card-grey);
 }
 
 .card-improve svg, .card-worsen svg{
@@ -160,13 +158,12 @@
 
 .card-percentage-timestamp {
     margin: 0 0 0 1.25rem;
-    color: var(--card-light-grey);
+    color: var(--card-grey);
 }
 
 .charts-container {
     display: grid;
-    grid-template-columns: 60% 40%;
-    grid-gap: 3rem;
+    grid-template-columns: 60% 35%;
     margin: 3.125rem 0;
 }
 
@@ -199,7 +196,7 @@
 
 .chart-group-type {
     font-size: 1rem;
-    color: var(--card-grey);
+    color: var(--grey);
 }
 
 .chart-title {
@@ -209,8 +206,8 @@
 }
 
 .chart-btn {
-    color: var(--card-grey);
-    background-color: var(--chart-btn-inactive);
+    color: var(--grey);
+    background-color: var(--light-grey);
     border-radius: 10px;
     padding: 0.5rem 1.375rem;
     margin-left: 1.25rem;
@@ -261,6 +258,42 @@
     margin: 0;
     padding: 0;
     font-size: 0.875rem;
+}
+
+.reports-info p {
+    font-size: 1.125rem;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
+    border-bottom: 1px solid #66666640;
+}
+
+.table-header {
+    background-color: var(--primary-color);
+}
+
+.table-row {
+    text-align: center;
+}
+
+.table-row .td-sm, .table-header .th-sm {
+    padding: 1rem 0;
+    font-size: 1.125rem;
+    border-left: 1px solid #66666640;
+    border-right: 1px solid #66666640;
+}
+
+.table-header .th-sm {
+    color: var(--white);
+    font-weight: 500;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: var(--light-grey);
 }
 
 @media ( max-width: 800px ) {  
