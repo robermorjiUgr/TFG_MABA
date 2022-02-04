@@ -2,6 +2,34 @@
     --card-green: #008154;
     --card-red: #AB292C;
     --card-grey: #868686;
+    --nav-grey: #707070;
+}
+
+.navbar.dashboard .navbar-container {
+    justify-content: flex-end;
+    max-width: 1300px;
+    margin-left: 320px;
+    border-bottom: 1px solid #70707050;
+}
+
+.navbar.dashboard {
+    background-color: transparent;
+    position: inherit;
+    margin-bottom: 3rem;
+}
+
+.navbar.dashboard .navbar-container .menu {
+    padding-right: 3rem;
+}
+
+.navbar.dashboard .navbar-container .menu-link {
+    color: var(--nav-grey);
+    font-weight: 700;
+}
+
+.navbar.dashboard .navbar-container .menu-link:hover {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
 }
 
 .dashboard-nav {
@@ -85,6 +113,7 @@
     padding-left: 1.25rem;
     border-radius: 1.25rem;
     border-color: #12192F35;
+    background-color: transparent;
     box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
@@ -164,6 +193,7 @@
 .charts-container {
     display: grid;
     grid-template-columns: 60% 35%;
+    grid-column-gap: 5%;
     margin: 3.125rem 0;
 }
 
@@ -173,6 +203,7 @@
     border-radius: 1.25rem;
     border-color: #12192F35;
     box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.2);
+    margin-bottom: 3.125rem;
     /* width: fit-content; */
 }
 

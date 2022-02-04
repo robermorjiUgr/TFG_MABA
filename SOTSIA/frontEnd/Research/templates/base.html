@@ -19,21 +19,23 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 </head>
 <body>
-    {% block navbar %}
-        <nav class="navbar">
-            <div class="navbar-container">
-                <div class="logo">
-                    <a href="/" class="logo-title">SoTSIA</a>
+    {% block navbar %}   
+        {% if user.is_authenticated %}
+            <nav class="navbar">
+                <div class="navbar-container">
+                    <div class="logo">
+                        <a href="/" class="logo-title">SoTSIA</a>
+                    </div>
+                    <div class="menu">
+                        <ul class="menu-container">
+                            <li class="menu-item"><a href="/" class="menu-link">About Us</a></li>
+                            <li class="menu-item"><a href="{% url 'reports' %}" class="menu-link">Testing</a></li>
+                            <li class="menu-item"><a href="{% url 'login' %}" class="menu-link">Sign In</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="menu">
-                    <ul class="menu-container">
-                        <li class="menu-item"><a href="/" class="menu-link">About Us</a></li>
-                        <li class="menu-item"><a href="{% url 'reports' %}" class="menu-link">Testing</a></li>
-                        <li class="menu-item"><a href="{% url 'login' %}" class="menu-link">Sign In</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+            </nav>
+        {% endif %}
     {% endblock navbar %}
     {% block content %}{% endblock content %}
     {% block footer %}{% endblock footer %}
