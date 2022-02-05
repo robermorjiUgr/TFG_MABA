@@ -50,7 +50,11 @@
 .dash-logo {
     display: flex;
     justify-content: center;
-    margin-bottom: 2.5rem;
+    align-items: center;
+    height: 90px;
+    border-bottom: 1px solid var(--grey);
+    width: min-content;
+    margin: 0 auto 2.5rem auto;
 }
 
 .dash-logo .logo-link {
@@ -58,8 +62,6 @@
     color: var(--white);
     font-size: 2.25rem;
     font-weight: bold;
-    border-bottom: 1px solid var(--grey);
-    padding: 1.375rem 0.5rem;
 }
 
 .dash-menu-links {
@@ -74,9 +76,24 @@
     padding: 1.25rem 1.5rem;
 }
 
+.dash-menu-item_text {
+    font-family: "Montserrat", sans-serif;
+    color: var(--light-grey);
+    font-weight: 500;
+    font-size: 1.25rem;
+    padding-left: 0.625rem;
+}
+
+.dash-menu-item.active .dash-menu-item_text {
+    color: var(--primary-color);
+}
+
 .dash-menu-item svg, .dash-sign-out svg {
     color: var(--secondary-color);
-    padding-right: 0.625rem;
+}
+
+.dash-menu-item:hover svg, .dash-sign-out:hover svg {
+    color: white;
 }
 
 .dash-menu-item.active {
@@ -192,7 +209,7 @@
 
 .charts-container {
     display: grid;
-    grid-template-columns: 60% 35%;
+    grid-template-columns: 58% 37%;
     grid-column-gap: 5%;
     margin: 3.125rem 0;
 }
@@ -325,6 +342,68 @@
 
 .table-striped tbody tr:nth-of-type(even) {
     background-color: var(--light-grey);
+}
+
+#my-reports-table_paginate-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.25rem 0;
+}
+
+#my-reports-table_info {
+    font-size: 1.125rem;
+}
+
+.paginate_button {
+    font-size: 1.125rem;
+    margin: 1rem;
+    color: var(--primary-color);
+}
+
+.paginate_button.current {
+    padding: 0.5rem 0.75rem;
+    background-color: var(--primary-color);
+    color: var(--light-grey);
+}
+
+.paginate_button.disabled {
+    color: var(--nav-grey);
+}
+
+
+@media ( max-width: 1700px ) {
+    .dashboard-nav {
+        width: 125px;
+    }
+
+    .navbar.dashboard .navbar-container {
+        margin-left: 125px;
+    }
+
+    .dash-logo .logo-link {
+        font-size: 1.625rem;
+    }
+
+    .dash-menu-links, .dash-sign-out {
+        margin-left: 1.75rem;
+    }
+
+    .dash-menu-item {
+        width: min-content;
+    }
+
+    .dash-menu-item.active {
+        border-radius: 3rem;
+    }
+
+    .dash-menu-item_text {
+        display: none;
+    }
+
+    .dashboard-content {
+        padding-left: 125px;
+    }
 }
 
 @media ( max-width: 800px ) {  

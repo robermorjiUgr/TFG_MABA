@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block js_content %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+{% endblock %}
+
 {% block navbar %}
 {% if user.is_authenticated %}
 <nav class="navbar dashboard">
@@ -20,44 +26,44 @@
                     <li class="dash-menu-item {% block dash_item_reports %}{% endblock dash_item_reports %}">
                         <a href="{% url 'reports' %}" class="dash-link">
                             <i class="fas fa-folder-open"></i>
-                            My Reports
+                            <span class="dash-menu-item_text">My Reports</span>
                         </a>
                     </li>
                     <li class="dash-menu-item {% block dash_item_testing %}{% endblock dash_item_testing %}">
                         <a href="{% url 'testing' %}" class="dash-link">
                             <i class="fas fa-vial"></i>
-                            Research
+                            <span class="dash-menu-item_text">Research</span>
                         </a>
                     </li>
                     <li class="dash-menu-item {% block dash_item_dataset %}{% endblock dash_item_dataset %}">
                         <a href="{% url 'dataset' %}" class="dash-link">
                             <i class="fas fa-database"></i>
-                            Dataset
+                            <span class="dash-menu-item_text">Dataset</span>
                         </a>
                     </li>
                     <li class="dash-menu-item {% block dash_item_deep_learning %}{% endblock dash_item_deep_learning %}">
                         <a href="#" class="dash-link">
                             <i class="fas fa-square"></i>
-                            Deep Learning
+                            <span class="dash-menu-item_text">Deep Learning</span>
                         </a>
                     </li>
                     <li class="dash-menu-item {% block dash_item_machine_learning %}{% endblock dash_item_machine_learning %}">
                         <a href="#" class="dash-link">
                             <i class="fas fa-square"></i>
-                            Machine Learning
+                            <span class="dash-menu-item_text">Machine Learning</span>
                         </a>
                     </li>
                     <li class="dash-menu-item {% block dash_item_data_mining %}{% endblock dash_item_data_mining %}">
                         <a href="#" class="dash-link">
                             <i class="fas fa-square"></i>
-                            Data Mining
+                            <span class="dash-menu-item_text">Data Mining</span>
                         </a>
                     </li>
                 </ul>
                 <div class="dash-sign-out">
                     <a href="{% url 'logout' %}" class="dash-link">
                         <i class="fas fa-sign-out-alt"></i>
-                        Sign Out
+                        <span class="dash-menu-item_text">Sign Out</span>
                     </a>
                 </div>
             </div>
