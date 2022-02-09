@@ -336,30 +336,30 @@
     text-align: center;
 }
 
-.table-row .td-sm, .table-header .th-sm {
+.table-row .td-item, .table-header .th-item {
     padding: 1rem 0;
     font-size: 1.125rem;
     border-left: 1px solid #66666640;
     border-right: 1px solid #66666640;
 }
 
-.table-header .th-sm {
+.table-header .th-item {
     color: var(--white);
     font-weight: 500;
 }
 
-.table-striped tbody tr:nth-of-type(even) {
+.table-striped tbody tr:nth-of-type(odd) {
     background-color: var(--light-grey);
 }
 
-#my-reports-table_paginate-wrapper {
+.table_paginate-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 1.25rem 0;
 }
 
-#my-reports-table_info {
+.table-paginate-info {
     font-size: 1.125rem;
 }
 
@@ -490,7 +490,7 @@
         font-size: 1.125rem;
     }
 
-    .navbar.dashboard .navbar-container .menu {
+    .navbar.dashboard .navbar-container .menu, .navbar.dashboard.responsive-menu .navbar-container .menu {
         display: none;
     }
 
@@ -540,4 +540,54 @@
     .legend-container--small {
         margin: 0.5rem 0;
     }
+}
+
+@media (max-width: 850px) {
+    .table {
+        border: none;
+    }
+
+    .table-header {
+        background-color: inherit;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .table-header .th-item {
+        display: block;
+        width: auto !important;
+        padding: 0 1rem 0.75rem 2rem;
+        text-align: start;
+        color: var(--primary-color);
+        font-weight: bold;
+    }
+
+    .table-row .td-item {
+        display: block;
+        text-align: start;
+        padding: 0 1rem 0.75rem 2rem;
+    }
+
+    .table-header .th-item, .table-row .td-item {
+        border: none;
+    }
+    
+    .table-header .th-item:first-child, .table-row .td-item:first-child {
+        padding: 1rem 1rem 0.75rem 1rem;
+    }
+    
+    .table-header .th-item:last-child, .table-row .td-item:last-child {
+        padding: 0 1rem 1rem 2rem;
+    }
+
+    .table_paginate-wrapper {
+        display: block;
+    }
+
+    .table-paginate-numbers {
+        margin-top: 1rem;
+    }
+
+    .table-paginate-numbers .paginate_button:first-child {
+        margin: 1rem 1rem 1rem 0;
+    }    
 }
