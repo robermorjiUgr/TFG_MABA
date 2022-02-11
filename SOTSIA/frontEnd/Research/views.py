@@ -36,3 +36,17 @@ def dataset(request):
 @login_required(login_url='/sotsia/login/')
 def reports(request):
     return render(request, 'sotsia/reports.html')
+
+@login_required(login_url='/sotsia/login/')
+def algorithm(request):
+    args = {}
+    algorithm = ''
+    if request.build_absolute_uri().find("deep-learning") != -1:
+        algorithm = 'Deep Learning'
+    elif request.build_absolute_uri().find("data-mining") != -1:
+        algorithm = 'Data Mining'
+    elif request.build_absolute_uri().find("machine-learning") != -1:
+        algorithm = 'Machine Learning'
+    args['algorithm'] = algorithm
+
+    return render(request, 'sotsia/algorithm.html', args)

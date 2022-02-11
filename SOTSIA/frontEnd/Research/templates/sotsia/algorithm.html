@@ -1,0 +1,154 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}{{ algorithm }}{% endblock %}
+
+{% block dash_item_algorithm %}active{% endblock dash_item_algorithm %}
+
+{% block content_dash %}
+  	<section class="algorithm-page">
+		<h1>{{ algorithm }} Algorithm</h1>
+		<select class="db-selector" name="algorithm_database">
+            <option class="db-selector-item" hidden>Select a Database</option>
+            <option class="db-selector-item" selected value="database1">Resources and Energy</option>
+            <option class="db-selector-item" value="database2">Database 2</option>
+            <option class="db-selector-item" value="database3">Database 3</option>
+        </select>
+		<div class="algorithm-table">
+			<table id="algorithm-table" class="table table-striped">
+				<thead>
+					<tr class="table-header">
+						<th class="th-item">Dataset</th>
+						<th class="th-item">Types Selected</th>
+						<th class="th-item">Start Date</th>
+						<th class="th-item">End Date</th>
+						<th class="th-item">Testing</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="table-row">
+						<td class="td-item">1</td>
+						<td class="td-item">Type 1; Type 4; Type 6; Type 8</td>
+						<td class="td-item">2011/02/01</td>
+						<td class="td-item">2011/04/25</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">2</td>
+						<td class="td-item">Type 1; Type 2; Type 6</td>
+						<td class="td-item">2011/07/18</td>
+						<td class="td-item">2011/07/25</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">3</td>
+						<td class="td-item">Type 2; Type 4; Type 6</td>
+						<td class="td-item">2008/12/01</td>
+						<td class="td-item">2009/01/01</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">4</td>
+						<td class="td-item">Type 1; Type 2; Type 3; Type 4; Type 5; Type 6</td>
+						<td class="td-item">2011/03/29</td>
+						<td class="td-item">2012/03/29</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">5</td>
+						<td class="td-item">Type 3; Type 4; Type 5; Type 6</td>
+						<td class="td-item">2006/01/01</td>
+						<td class="td-item">2008/11/28</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">6</td>
+						<td class="td-item">Type 1; Type 3; Type 5; Type 7</td>
+						<td class="td-item">2011/12/02</td>
+						<td class="td-item">2012/12/02</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">7</td>
+						<td class="td-item">Type 2; Type 4; Type 6; Type 8</td>
+						<td class="td-item">2012/06/06</td>
+						<td class="td-item">2012/08/06</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">8</td>
+						<td class="td-item">Type 1; Type 8</td>
+						<td class="td-item">2007/12/07</td>
+						<td class="td-item">2010/10/14</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">9</td>
+						<td class="td-item">Type 2; Type 3; Type 5; Type 6; Type 8</td>
+						<td class="td-item">2008/09/15</td>
+						<td class="td-item">2009/09/15</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">10</td>
+						<td class="td-item">Type 1; Type 3; Type 5; Type 8</td>
+						<td class="td-item">2007/10/10</td>
+						<td class="td-item">2008/12/13</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">11</td>
+						<td class="td-item">Type 2; Type 4; Type 5</td>
+						<td class="td-item">2006/12/20</td>
+						<td class="td-item">2008/11/28</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+					<tr class="table-row">
+						<td class="td-item">12</td>
+						<td class="td-item">Type 1; Type 8</td>
+						<td class="td-item">2011/12/01</td>
+						<td class="td-item">2012/12/02</td>
+						<td class="td-item">
+							<a href="#" class="algorithm-testing-btn">Start Experiment</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+  	</section>
+
+	<script>
+		$(document).ready(function () {
+			$('#algorithm-table').DataTable();
+			$('#algorithm-table_filter').remove();
+			$('#algorithm-table_length').remove();
+			$("#algorithm-table_info").addClass('table-paginate-info');
+			$("#algorithm-table_paginate").addClass('table-paginate-numbers');
+
+			$('<div id="algorithm-table_paginate-wrapper" class="table_paginate-wrapper"></div>').appendTo('#algorithm-table_wrapper')
+			$('#algorithm-table_paginate-wrapper').append($("#algorithm-table_info"));
+			$('#algorithm-table_paginate-wrapper').append($("#algorithm-table_paginate"));
+		});
+	</script>
+{% endblock %}
