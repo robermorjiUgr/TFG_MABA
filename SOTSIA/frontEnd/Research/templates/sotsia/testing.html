@@ -5,6 +5,7 @@
 {% block dash_item_testing %}active{% endblock dash_item_testing %}
 
 {% block content_dash %}
+    <p>{{ users }}</p>
     <section class="testing-page">
         <h1>Research</h1>
         <select class="testing-selector db-selector" name="select_database">
@@ -46,7 +47,7 @@
                 <div class="card-info">
                     <div class="card-text">
                         <h2 class="card-title">Scientists</h2>
-                        <span class="card-value">22</span>
+                        <span class="card-value">{{ scientists }}</span>
                     </div>
                     <i class="fas fa-users"></i>
                 </div>

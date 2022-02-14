@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 # Create your views here.
 @login_required(login_url='/sotsia/login/')
@@ -8,7 +9,12 @@ def home(request):
 
 @login_required(login_url='/sotsia/login/')
 def testing(request):
-    return render(request, 'sotsia/testing.html')
+    args = {}
+    args['users'] = User.objects.all()
+    args['scientists'] = User.objects.count()
+    return render(request, 'sotsia/testing.html', args)
+
+
     # url = 'http://localhost:5000/dataset/dbName'
     # res = requests.request(method="GET", url=url)
     # list_dict = res.json()

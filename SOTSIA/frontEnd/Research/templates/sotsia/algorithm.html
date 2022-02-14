@@ -2,7 +2,17 @@
 
 {% block title %}{{ algorithm }}{% endblock %}
 
-{% block dash_item_algorithm %}active{% endblock dash_item_algorithm %}
+{% block dash_item_deep_learning %}
+	{% if algorithm == "Deep Learning" %}active{% endif %}
+{% endblock dash_item_deep_learning %}
+
+{% block dash_item_data_mining %}
+	{% if algorithm == "Data Mining" %}active{% endif %}
+{% endblock dash_item_data_mining %}
+
+{% block dash_item_machine_learning %}
+	{% if algorithm == "Machine Learning" %}active{% endif %}
+{% endblock dash_item_machine_learning %}
 
 {% block content_dash %}
   	<section class="algorithm-page">
