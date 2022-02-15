@@ -1,13 +1,16 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import DatasetConfiguration
+
+from datetime import datetime
 
 # Create your views here.
-@login_required(login_url='/sotsia/login/')
+@login_required(login_url='/login/')
 def home(request):
     return render(request, 'home.html')
 
-@login_required(login_url='/sotsia/login/')
+@login_required(login_url='/login/')
 def testing(request):
     args = {}
     args['users'] = User.objects.all()
@@ -33,17 +36,70 @@ def testing(request):
     #     template = 'sotsia/testing-fail.html'
     # return render(request, 'sotsia/testing.html', args)
 
+def date_is_valid(date):
+    try:
+        date = datetime.strptime(date, "%d/%m/%Y")
+        return True
+    except ValueError:
+        return False
 
-@login_required(login_url='/sotsia/login/')
+
+
+@login_required(login_url='/login/')
 def dataset(request):
-    return render(request, 'sotsia/dataset.html')
+    args = {}
+    args['databases'] = []
+    args['databases'].append('Resources and Energy')
+    args['databases'].append('Medical')
+    args['databases'].append('ICPE')
+    args['types'] = []
+    args['types'].append('Name')
+    args['types'].append('Surname')
+    args['types'].append('Address')
+    args['types'].append('Telephone')
+    args['types'].append('Country')
+    args['message'] = ''
+
+    args['model'] = DatasetConfiguration.objects.all()
+
+    if request.method == "POST":
+        args['message'] = 'POST'
+        types = request.POST.getlist('types', '')
+        types_list = ''
+        print(request.POST.get('start_date', ''))
+        start_date = request.POST.get('start_date', '')
+        end_date = request.POST.get('end_date', '')
+        if date_is_valid(start_date) and date_is_valid(end_date):
+            # Dates are in a valid format "DD/MM/YYYY"
+            start_date = datetime.strptime(start_date, "%d/%m/%Y")
+            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+            if start_date < end_date:
+                # Start date is before the end date 
+                if types == '':
+                    args['message'] = 'You must check at least one type to create a new dataset'
+                    args['message_type'] = 'error'
+                else:
+                    for item in types:
+                        types_list += item + ';'
+                    args['message'] = 'The dataset has been correctly created'
+                    args['message_type'] = 'correct'
+                    # Create the model and save it
+                    dataset = DatasetConfiguration(database="Resources and Energy", start_date=start_date, end_date=end_date, author=request.user.id, types_selected=types_list)
+                    dataset.save()
+            else:
+                args['message'] = 'The starting date must be before the ending date'
+                args['message_type'] = 'error'
+        else:
+            args['message'] = 'Incorrect date format, use the correct format: "DD/MM/YYYY"'
+            args['message_type'] = 'error'
+    return render(request, 'sotsia/dataset.html', args)
 
 
-@login_required(login_url='/sotsia/login/')
+@login_required(login_url='/login/')
 def reports(request):
     return render(request, 'sotsia/reports.html')
 
-@login_required(login_url='/sotsia/login/')
+@login_required(login_url='/login/')
 def algorithm(request):
     args = {}
     algorithm = ''

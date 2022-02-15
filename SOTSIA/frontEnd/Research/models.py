@@ -16,4 +16,5 @@ class DatasetConfiguration(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     author = models.CharField(max_length=100)
+    types_selected = models.TextField()         # Use ';' as delimiter
 
