@@ -1,0 +1,31 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}{{ algorithm }} Experimentation{% endblock %}
+
+{% block dash_item_deep_learning %}
+	{% if algorithm == "Deep Learning" %}active{% endif %}
+{% endblock dash_item_deep_learning %}
+
+{% block dash_item_data_mining %}
+	{% if algorithm == "Data Mining" %}active{% endif %}
+{% endblock dash_item_data_mining %}
+
+{% block dash_item_machine_learning %}
+	{% if algorithm == "Machine Learning" %}active{% endif %}
+{% endblock dash_item_machine_learning %}
+
+{% block content_dash %}
+  	<section class="algorithm-page">
+		<!-- <div class="breadcrumb">
+			<a href="/" class="breadcrumb-link">/</a>
+			<i class="fas fa-angle-right"></i>
+			<a href={{parent}} class="breadcrumb-link">{{ algorithm }}</a>
+			<i class="fas fa-angle-right"></i>
+			<span class="breadcrumb-current">Experimentation</span>
+		</div> -->
+		<h1>{{ algorithm }} Experimentation</h1>
+		<div class="database-selection">
+			<h2>Database</h2>
+		</div>
+  	</section>
+{% endblock %}

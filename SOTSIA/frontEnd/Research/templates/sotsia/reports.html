@@ -141,6 +141,8 @@
 
 	<script>
 		$(document).ready(function () {
+			var rows_number = $('#my-reports-table .table-row').length
+			
 			$('#my-reports-table').DataTable();
 			$('#my-reports-table_filter').remove();
 			$('#my-reports-table_length').remove();
@@ -150,6 +152,11 @@
 			$('<div id="my-reports-table_paginate-wrapper" class="table_paginate-wrapper"></div>').appendTo('#my-reports-table_wrapper')
 			$('#my-reports-table_paginate-wrapper').append($("#my-reports-table_info"));
 			$('#my-reports-table_paginate-wrapper').append($("#my-reports-table_paginate"));
+
+			if(rows_number <= 10) {
+				$("#my-reports-table_info").remove();
+				$("#my-reports-table_paginate").remove();
+			}
 		});
 	</script>
 {% endblock %}

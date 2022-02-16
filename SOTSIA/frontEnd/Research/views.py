@@ -11,11 +11,10 @@ def home(request):
     return render(request, 'home.html')
 
 @login_required(login_url='/login/')
-def testing(request):
+def research(request):
     args = {}
-    args['users'] = User.objects.all()
     args['scientists'] = User.objects.count()
-    return render(request, 'sotsia/testing.html', args)
+    return render(request, 'sotsia/research.html', args)
 
 
     # url = 'http://localhost:5000/dataset/dbName'
@@ -36,6 +35,7 @@ def testing(request):
     #     template = 'sotsia/testing-fail.html'
     # return render(request, 'sotsia/testing.html', args)
 
+
 def date_is_valid(date):
     try:
         date = datetime.strptime(date, "%d/%m/%Y")
@@ -43,11 +43,10 @@ def date_is_valid(date):
     except ValueError:
         return False
 
-
-
 @login_required(login_url='/login/')
 def dataset(request):
     args = {}
+    # Modificar esto cuando se añada la conexión a la BD
     args['databases'] = []
     args['databases'].append('Resources and Energy')
     args['databases'].append('Medical')
@@ -59,8 +58,6 @@ def dataset(request):
     args['types'].append('Telephone')
     args['types'].append('Country')
     args['message'] = ''
-
-    args['model'] = DatasetConfiguration.objects.all()
 
     if request.method == "POST":
         args['message'] = 'POST'
@@ -80,11 +77,13 @@ def dataset(request):
                     args['message_type'] = 'error'
                 else:
                     for item in types:
-                        types_list += item + ';'
+                        types_list += item + '; '
+                    # Remove last space from string
+                    types_list = types_list[:-1]
                     args['message'] = 'The dataset has been correctly created'
                     args['message_type'] = 'correct'
                     # Create the model and save it
-                    dataset = DatasetConfiguration(database="Resources and Energy", start_date=start_date, end_date=end_date, author=request.user.id, types_selected=types_list)
+                    dataset = DatasetConfiguration(database="Resources and Energy", start_date=start_date, end_date=end_date, author=request.user.username, types_selected=types_list)
                     dataset.save()
             else:
                 args['message'] = 'The starting date must be before the ending date'
@@ -111,4 +110,30 @@ def algorithm(request):
         algorithm = 'Machine Learning'
     args['algorithm'] = algorithm
 
+    datasets = DatasetConfiguration.objects.all()
+    my_datasets = []
+    for i in datasets:
+        if i.author == request.user.username:
+            my_datasets.append(i)
+    args['datasets'] = my_datasets
+
     return render(request, 'sotsia/algorithm.html', args)
+
+@login_required(login_url='/login/')
+def experimentation(request):
+    args = {}
+    algorithm = ''
+    parent = ''
+    if request.build_absolute_uri().find("deep-learning") != -1:
+        parent = '/deep-learning'
+        algorithm = 'Deep Learning'
+    elif request.build_absolute_uri().find("data-mining") != -1:
+        parent = '/data-mining'
+        algorithm = 'Data Mining'
+    elif request.build_absolute_uri().find("machine-learning") != -1:
+        parent = '/machine-learning'
+        algorithm = 'Machine Learning'
+    args['algorithm'] = algorithm
+    args['parent'] = parent
+
+    return render(request, 'sotsia/experimentation.html', args)

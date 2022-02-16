@@ -6,13 +6,15 @@
 
 {% block content_dash %}
     <section class="dataset-page">
-        {% for item in model %}
-            {{item.types_selected}}
-            <br>
-        {% endfor %}
-        <div class="dataset-message">
-            <p>{{ message }}</p>
-        </div>
+        {% if message %}
+            <div class="dataset-message">
+                {% if message_type == 'error' %}
+                    <p><i class="fas fa-exclamation-circle"></i> {{ message }}</p>
+                {% elif message_type == 'correct' %}
+                    <p><i class="fas fa-check-circle"></i> {{ message }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
         <h1>Configure Dataset</h1>
         <h2>Database</h2>
         <select class="db-selector" name="select_database" required>
@@ -25,19 +27,27 @@
             {% csrf_token %}
             <div class="dates-form">
                 <h2>Time Interval</h2>
-                <label for="start-date-input">Start Date</label>
-                <input id="start-date-input" class="dataset-form-time" type="datetime" name="start_date" required>
-                <label for="end-date-input">End Date</label>
-                <input id="end-date-input" class="dataset-form-time" type="datetime" name="end_date" required>
+                <div class="dates-form-inputs">
+                    <div class="date-input">
+                        <label for="start-date-input">Start Date</label>
+                        <input id="start-date-input" class="dataset-form-time" type="datetime" name="start_date" required>
+                    </div>
+                    <div class="date-input">
+                        <label for="end-date-input">End Date</label>
+                        <input id="end-date-input" class="dataset-form-time" type="datetime" name="end_date" required>
+                    </div>
+                </div>
             </div>
             <div class="types-form">
                 <h2>Types</h2>
+                <div class="types-labels">
                 {% for item in types %}
-                    <label>
+                    <label class="types-label-item">
                         <input type="checkbox" id="cbox{{ forloop.counter }}" value="{{item}}" name="types">
                         {{ item }}
                     </label>
                 {% endfor %}
+                </div>
             </div>
             <button class="submit-btn" type="submit">Create Dataset</button>
         </form>
