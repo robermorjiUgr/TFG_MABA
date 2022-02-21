@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import DatasetConfiguration
+from .models import DatasetConfiguration, Experiment
 
-from datetime import datetime
+from datetime import datetime, time
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -60,7 +60,7 @@ def dataset(request):
     args['message'] = ''
 
     if request.method == "POST":
-        args['message'] = 'POST'
+        args['message'] = ''
         types = request.POST.getlist('types', '')
         types_list = ''
         print(request.POST.get('start_date', ''))
@@ -96,11 +96,25 @@ def dataset(request):
 
 @login_required(login_url='/login/')
 def reports(request):
-    return render(request, 'sotsia/reports.html')
+    args = {}
+    experiments = Experiment.objects.all()
+    experiments_list = []
+
+    for item in experiments:
+        if item.dataset.author == request.user.username:
+            experiments_list.append(item)
+
+    args['experiments'] = experiments_list
+
+    return render(request, 'sotsia/reports.html', args)
 
 @login_required(login_url='/login/')
 def algorithm(request):
     args = {}
+    args['databases'] = []
+    args['databases'].append('Resources and Energy')
+    args['databases'].append('Medical')
+    args['databases'].append('ICPE')
     algorithm = ''
     if request.build_absolute_uri().find("deep-learning") != -1:
         algorithm = 'Deep Learning'
@@ -124,16 +138,45 @@ def experimentation(request):
     args = {}
     algorithm = ''
     parent = ''
+    args['specific_algorithms'] = []
     if request.build_absolute_uri().find("deep-learning") != -1:
         parent = '/deep-learning'
         algorithm = 'Deep Learning'
+        args['specific_algorithms'].append('Algorithm 1')
+        args['specific_algorithms'].append('Algorithm 2')
+        args['specific_algorithms'].append('Algorithm 3')
     elif request.build_absolute_uri().find("data-mining") != -1:
         parent = '/data-mining'
         algorithm = 'Data Mining'
+        args['specific_algorithms'].append('Algorithm 1')
+        args['specific_algorithms'].append('Algorithm 2')
+        args['specific_algorithms'].append('Algorithm 3')
     elif request.build_absolute_uri().find("machine-learning") != -1:
         parent = '/machine-learning'
         algorithm = 'Machine Learning'
+        args['specific_algorithms'].append('Algorithm 1')
+        args['specific_algorithms'].append('Algorithm 2')
+        args['specific_algorithms'].append('Algorithm 3')
     args['algorithm'] = algorithm
     args['parent'] = parent
+
+    dataset = DatasetConfiguration.objects.get(pk=request.GET.get('dataset-id'))
+    args['dataset'] = dataset
+    types_list = dataset.types_selected.split('; ')
+    types_list[-1] = types_list[-1][:-1]            # Last item only have a ';', not '; '
+    args['dataset_types'] = types_list
+
+    if request.method == "POST":
+        args['message'] = ''
+        algorithm_specific = request.POST.get('select_algorithm', '')
+        description=request.POST.get('description', '')
+        experiment = Experiment(
+            algorithm_group=algorithm, 
+            algorithm_specific=algorithm_specific, 
+            start_date=datetime.now(),
+            description=description,
+            duration=time(0, 2, 45), 
+            dataset=dataset)
+        experiment.save()
 
     return render(request, 'sotsia/experimentation.html', args)

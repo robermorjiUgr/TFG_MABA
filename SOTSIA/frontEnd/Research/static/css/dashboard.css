@@ -129,7 +129,7 @@
     display: none;
 }
 
-.db-selector {
+.db-selector, .algorithm-selector {
     min-width: 300px;
     height: 2.25rem;
     font-size: 1.125rem;
@@ -148,12 +148,12 @@
     border-color: #12192F35;
 }
 
-.db-selector-item{
+.db-selector-item, .algorithm-selector-item {
     font-size: 1.125rem;
     font-family: 'Montserrat';
 }
 
-.research-cards{
+.research-cards {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -445,7 +445,7 @@
     height: 1rem;
 }
 
-.dataset-form .submit-btn {
+.submit-btn {
     font-size: 1.125rem;
     font-weight: 600;
     background-color: var(--primary-color);
@@ -453,6 +453,10 @@
     padding: 0.75rem 3.5rem;
     border-radius: 1rem;
     margin-top: 3rem;
+}
+
+.experimentation-form .submit-btn {
+    margin-top: 2.25rem;
 }
 
 .breadcrumb {
@@ -483,6 +487,24 @@
 .breadcrumb .breadcrumb-current {
     color: var(--primary-color);
     border-bottom: 1px solid #12192F75;
+}
+
+.experiment-header {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.dataset-info .dataset-info-item, .dataset-info .dataset-info-item * {
+    font-size: 1.125rem;
+}
+
+.dataset-info .dataset-info-item {
+    margin-bottom: 0.25rem;
+}
+
+.description-textarea {
+    max-width: 500px;
+    width: 100%;
 }
 
 @media ( max-width: 1700px ) {

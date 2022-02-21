@@ -1,5 +1,7 @@
 {% extends "base_dashboard.html" %}
 
+{% load format %}
+
 {% block title %}Dataset{% endblock %}
 
 {% block dash_item_dataset %}active{% endblock dash_item_dataset %}
@@ -20,7 +22,7 @@
         <select class="db-selector" name="select_database" required>
             <option class="db-selector-item" hidden>Select a Database</option>
             {% for item in databases %}
-                <option class="db-selector-item" value="database1">{{ item }}</option>
+                <option class="db-selector-item" value="{{ item|space_underscore|lower }}">{{ item }}</option>
             {% endfor %}
         </select>
         <form action="#" method="post" class="dataset-form">
