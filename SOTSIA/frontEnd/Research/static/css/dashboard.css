@@ -204,12 +204,13 @@
 }
 
 .card-improve svg, .card-worsen svg{
-    font-size: 1.25rem;
+    font-size: 0.75rem;
     margin-right: 0.175rem;
 }
 
 .card-improve svg, .card-improve .card-percentage {
     color: var(--card-green);
+    font-weight: 500;
 }
 
 .card-worsen svg, .card-worsen .card-percentage {

@@ -3,19 +3,34 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import DatasetConfiguration, Experiment
 
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
+from django.utils.timezone import make_aware
 
 # Create your views here.
 @login_required(login_url='/login/')
 def home(request):
     return render(request, 'home.html')
 
+
 @login_required(login_url='/login/')
 def research(request):
     args = {}
-    args['scientists'] = User.objects.count()
-    return render(request, 'sotsia/research.html', args)
+    now = make_aware(datetime.now())
+    one_week_ago = make_aware(datetime.now() - timedelta(days=7))
 
+    args['scientists'] = User.objects.count()
+    users_this_week = User.objects.filter(date_joined__gte=one_week_ago, date_joined__lt=now).count()
+    args['scientists_week'] = users_this_week
+
+    args['experiments'] = Experiment.objects.count()
+    experiments_this_week = Experiment.objects.filter(created_at__gte=one_week_ago, created_at__lt=now).count()
+    args['experiments_week'] = experiments_this_week
+
+    args['datasets'] = DatasetConfiguration.objects.count()
+    datasets_this_week = DatasetConfiguration.objects.filter(created_at__gte=one_week_ago, created_at__lt=now).count()
+    args['datasets_week'] = datasets_this_week
+
+    return render(request, 'sotsia/research.html', args)
 
     # url = 'http://localhost:5000/dataset/dbName'
     # res = requests.request(method="GET", url=url)
@@ -42,6 +57,7 @@ def date_is_valid(date):
         return True
     except ValueError:
         return False
+
 
 @login_required(login_url='/login/')
 def dataset(request):
@@ -108,6 +124,7 @@ def reports(request):
 
     return render(request, 'sotsia/reports.html', args)
 
+
 @login_required(login_url='/login/')
 def algorithm(request):
     args = {}
@@ -132,6 +149,7 @@ def algorithm(request):
     args['datasets'] = my_datasets
 
     return render(request, 'sotsia/algorithm.html', args)
+
 
 @login_required(login_url='/login/')
 def experimentation(request):

@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 
 # Configuration of the Dataset
@@ -7,6 +8,7 @@ class DatasetConfiguration(models.Model):
     end_date = models.DateTimeField()
     author = models.CharField(max_length=100)
     types_selected = models.TextField()         # Use '; ' as delimiter
+    created_at = models.DateTimeField(default=datetime.now, blank=True)    # For Research counter
 
 # Experiments information.
 class Experiment(models.Model):
@@ -16,5 +18,6 @@ class Experiment(models.Model):
     description = models.TextField()
     duration = models.TimeField()
     dataset = models.ForeignKey(DatasetConfiguration, null=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(default=datetime.now, blank=True)    # For Research counter
 
 
