@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import DatasetConfiguration, Experiment
+from django.shortcuts import get_object_or_404
 
 from datetime import datetime, time, timedelta
 from django.utils.timezone import make_aware
@@ -53,7 +54,8 @@ def research(request):
 
 def date_is_valid(date):
     try:
-        date = datetime.strptime(date, "%d/%m/%Y")
+        # Check if dates are in the valid format "YYYY-MM-DD"
+        date = datetime.strptime(date, "%Y-%m-%d")
         return True
     except ValueError:
         return False
@@ -83,9 +85,12 @@ def dataset(request):
         start_date = request.POST.get('start_date', '')
         end_date = request.POST.get('end_date', '')
         if date_is_valid(start_date) and date_is_valid(end_date):
-            # Dates are in a valid format "DD/MM/YYYY"
-            start_date = datetime.strptime(start_date, "%d/%m/%Y")
-            end_date = datetime.strptime(end_date, "%d/%m/%Y")
+            # Dates are in a valid format "YYYY-MM-DD"
+            print("Is valid")
+            print(type(start_date))
+            print(start_date)
+            print(type(end_date))
+            print(end_date)
             if start_date < end_date:
                 # Start date is before the end date 
                 if types == '':
@@ -105,7 +110,7 @@ def dataset(request):
                 args['message'] = 'The starting date must be before the ending date'
                 args['message_type'] = 'error'
         else:
-            args['message'] = 'Incorrect date format, use the correct format: "DD/MM/YYYY"'
+            args['message'] = 'Incorrect date format, use the correct format: "YYYY-MM-DD"'
             args['message_type'] = 'error'
     return render(request, 'sotsia/dataset.html', args)
 
@@ -178,7 +183,7 @@ def experimentation(request):
     args['algorithm'] = algorithm
     args['parent'] = parent
 
-    dataset = DatasetConfiguration.objects.get(pk=request.GET.get('dataset-id'))
+    dataset = get_object_or_404(DatasetConfiguration, pk=request.GET.get('dataset-id'))
     args['dataset'] = dataset
     types_list = dataset.types_selected.split('; ')
     types_list[-1] = types_list[-1][:-1]            # Last item only have a ';', not '; '
@@ -198,3 +203,13 @@ def experimentation(request):
         experiment.save()
 
     return render(request, 'sotsia/experimentation.html', args)
+
+
+@login_required(login_url='/login/')
+def document(request, id):
+    args = {}
+    report = get_object_or_404(Experiment, pk=id)
+    args['report_id'] = report.id
+    args['report'] = report
+
+    return render(request, 'sotsia/document.html', args)

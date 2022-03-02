@@ -9,13 +9,13 @@
     justify-content: flex-end;
     max-width: 1300px;
     margin-left: 320px;
-    border-bottom: 1px solid #70707050;
+    padding: 0;
 }
 
 .navbar.dashboard {
     background-color: transparent;
     position: inherit;
-    margin-bottom: 3rem;
+    height: auto;
 }
 
 .navbar.dashboard .navbar-container > .dash-logo {
@@ -575,6 +575,8 @@
     .navbar.dashboard .navbar-container {
         margin-left: 0;
         justify-content: space-between;
+        border-bottom: 1px solid #70707050;
+        padding: 1.5rem;
     }
 
     .navbar.dashboard .dash-logo {

@@ -19,6 +19,7 @@
 						<th class="th-item">Description</th>
 						<th class="th-item">Start Date</th>
 						<th class="th-item">Duration</th>
+						<th class="th-item">Report</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -29,6 +30,7 @@
 							<td class="td-item">{{ item.description }}</td>
 							<td class="td-item">{{ item.start_date|date:"d M, Y" }}</td>
 							<td class="td-item">{{ item.duration|date:'H:i:s' }}</td>
+							<td class="td-item"><a href="{{item.id}}" class="algorithm-research-btn">Document</a></td>
 						</tr>
 					{% endfor %}
 				</tbody>

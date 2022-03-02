@@ -12,4 +12,5 @@ urlpatterns = [
     path('deep-learning/experimentation', views.experimentation, name='deep-learning-experimentation'),
     path('machine-learning/', views.algorithm, name='machine-learning'),
     path('machine-learning/experimentation', views.experimentation, name='machine-learning-experimentation'),
+    path('reports/<int:id>/', views.document, name='document'),
 ]

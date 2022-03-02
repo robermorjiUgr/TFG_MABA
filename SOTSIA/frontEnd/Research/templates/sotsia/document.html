@@ -1,0 +1,20 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Document{% endblock %}
+
+{% block dash_item_reports %}active{% endblock dash_item_reports %}
+
+{% block content_dash %}
+  	<section class="reports-page">
+        <div class="breadcrumb">
+			<a href="/" class="breadcrumb-link"><i class="fas fa-home"></i></a>
+			<i class="fas fa-angle-right"></i>
+			<a href="/reports" class="breadcrumb-link">Reports</a>
+			<i class="fas fa-angle-right"></i>
+			<span class="breadcrumb-current">Document {{ report_id }}</span>
+		</div>
+		<h1>Document {{ report_id }}</h1>
+		<p>{{ report.description }}</p>
+		
+  	</section>
+{% endblock %}
