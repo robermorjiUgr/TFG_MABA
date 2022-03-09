@@ -14,5 +14,3 @@ APP_ENV_DEVELOPMENT = 'development'
 APP_ENV_STAGING = 'staging'
 APP_ENV_PRODUCTION = 'production'
 APP_ENV = ''
-
-CONNECT_DATABASE = "mongodb://myUserTest:ro06an@127.0.0.1:27017"

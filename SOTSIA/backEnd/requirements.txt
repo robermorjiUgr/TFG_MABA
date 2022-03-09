@@ -1,7 +1,9 @@
 flask
-pandas
 IPython
 ipdb
-Flask-PyMongo
-
-
+pymongo
+flask_restx
+numpy
+sklearn
+plotly
+pandas
