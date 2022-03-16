@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404
 from datetime import datetime, time, timedelta
 from django.utils.timezone import make_aware
 
+import requests
+
 # Create your views here.
 @login_required(login_url='/login/')
 def home(request):
@@ -18,6 +20,11 @@ def research(request):
     args = {}
     now = make_aware(datetime.now())
     one_week_ago = make_aware(datetime.now() - timedelta(days=7))
+
+    url = 'http://localhost:5000/sotsia/get-db-names'
+    res = requests.request(method="GET", url=url)
+    dbs_list = res.json()['databases']
+    args['databases'] = dbs_list
 
     args['scientists'] = User.objects.count()
     users_this_week = User.objects.filter(date_joined__gte=one_week_ago, date_joined__lt=now).count()
@@ -64,18 +71,19 @@ def date_is_valid(date):
 @login_required(login_url='/login/')
 def dataset(request):
     args = {}
-    # Modificar esto cuando se añada la conexión a la BD
-    args['databases'] = []
-    args['databases'].append('Resources and Energy')
-    args['databases'].append('Medical')
-    args['databases'].append('ICPE')
-    args['types'] = []
-    args['types'].append('Name')
-    args['types'].append('Surname')
-    args['types'].append('Address')
-    args['types'].append('Telephone')
-    args['types'].append('Country')
     args['message'] = ''
+
+    # Databases
+    url = 'http://localhost:5000/sotsia/get-db-names'
+    res = requests.request(method="GET", url=url)
+    dbs_list = res.json()['databases']
+    args['databases'] = dbs_list
+
+    # Types
+    url = 'http://localhost:5000/sotsia/ICPE/get-collection-keys'
+    res = requests.request(method="GET", url=url)
+    types_list = res.json()['keys']
+    args['types'] = types_list
 
     if request.method == "POST":
         args['message'] = ''
