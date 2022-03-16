@@ -15,16 +15,32 @@ def home(request):
     return render(request, 'home.html')
 
 
+def api_request(function):
+    result = ''
+    try:
+        url = 'http://localhost:5000/sotsia/' + function
+        result = requests.request(method="GET", url=url)
+        print("Connection successful with the API")
+    except:
+        print("Error trying to access the API")
+    return result
+
+
 @login_required(login_url='/login/')
 def research(request):
     args = {}
     now = make_aware(datetime.now())
     one_week_ago = make_aware(datetime.now() - timedelta(days=7))
 
-    url = 'http://localhost:5000/sotsia/get-db-names'
-    res = requests.request(method="GET", url=url)
-    dbs_list = res.json()['databases']
+    # Database names
+    result = api_request('get-db-names')
+    dbs_list = result.json()['databases']
     args['databases'] = dbs_list
+
+    # Database size
+    result = api_request('ICPE/get-size')
+    size_mb = result.json()['total_size'] / (1024*1024)
+    args['db_size'] = size_mb
 
     args['scientists'] = User.objects.count()
     users_this_week = User.objects.filter(date_joined__gte=one_week_ago, date_joined__lt=now).count()
@@ -39,24 +55,6 @@ def research(request):
     args['datasets_week'] = datasets_this_week
 
     return render(request, 'sotsia/research.html', args)
-
-    # url = 'http://localhost:5000/dataset/dbName'
-    # res = requests.request(method="GET", url=url)
-    # list_dict = res.json()
-    # list_dbName = []
-    # for dict in list_dict:
-    #     for key,value in dict.items():
-    #         list_dbName.append(value) 
-    # url = 'http://localhost:5000/dataset/data'
-    # res = requests.request(method="GET", url=url)
-    # data_db = res.json()
-    # if request.user.is_authenticated:
-    #     args = {'user_authenticated' : 'true', 'database_name':list_dbName, 'data':data_db }
-    #     template = 'sotsia/testing.html'
-    # else:
-    #     args = {'user_authenticated' : 'false' }
-    #     template = 'sotsia/testing-fail.html'
-    # return render(request, 'sotsia/testing.html', args)
 
 
 def date_is_valid(date):
@@ -74,15 +72,13 @@ def dataset(request):
     args['message'] = ''
 
     # Databases
-    url = 'http://localhost:5000/sotsia/get-db-names'
-    res = requests.request(method="GET", url=url)
-    dbs_list = res.json()['databases']
+    result = api_request('get-db-names')
+    dbs_list = result.json()['databases']
     args['databases'] = dbs_list
 
     # Types
-    url = 'http://localhost:5000/sotsia/ICPE/get-collection-keys'
-    res = requests.request(method="GET", url=url)
-    types_list = res.json()['keys']
+    result = api_request('ICPE/get-collection-keys')
+    types_list = result.json()['keys']
     args['types'] = types_list
 
     if request.method == "POST":
@@ -141,10 +137,11 @@ def reports(request):
 @login_required(login_url='/login/')
 def algorithm(request):
     args = {}
-    args['databases'] = []
-    args['databases'].append('Resources and Energy')
-    args['databases'].append('Medical')
-    args['databases'].append('ICPE')
+
+    result = api_request('get-db-names')
+    dbs_list = result.json()['databases']
+    args['databases'] = dbs_list
+
     algorithm = ''
     if request.build_absolute_uri().find("deep-learning") != -1:
         algorithm = 'Deep Learning'

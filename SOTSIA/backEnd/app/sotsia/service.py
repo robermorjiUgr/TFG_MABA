@@ -27,7 +27,7 @@ class get_db_names(Resource):
 
 @ns_sotsia.route('/<database>/get-collection-keys', endpoint="get_collection_keys")
 @ns_sotsia.doc(description="Get a list with the names of all the key names in the collection data")
-class get_db_names(Resource):
+class get_collection_keys(Resource):
   def get(self, database):
     meta_keys = []
     try:
@@ -40,6 +40,20 @@ class get_db_names(Resource):
       print("Connection failed")
 
     return jsonify({'keys': meta_keys})
+
+@ns_sotsia.route('/<database>/get-size', endpoint="get_size")
+@ns_sotsia.doc(description="Get the size of the data collection given a database name")
+class get_database_size(Resource):
+  def get(self, database):
+    size = 0
+    try:
+      db = client[database]
+      print("Connected to database: " + database)
+      size = db.command("collstats", "data")['totalSize']
+    except:
+      print("Connection failed")
+
+    return jsonify({'total_size': size})
 
 
 # @ns_sotsia.route('/<database>',endpoint="database")
