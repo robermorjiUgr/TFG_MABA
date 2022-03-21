@@ -429,16 +429,20 @@
 }
 
 .types-labels {
-    max-width: 700px;
+    max-width: 825px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
 }
 
-.types-labels .types-label-item {
-    font-size: 1.125rem;
+.types-labels .checkbox-container {
     display: flex;
     margin-right: 1.5rem;
+    align-items: center;
+}
+
+.types-labels .types-label-item {
+    font-size: 1.125rem;
 }
 
 .types-labels .types-label-item input {

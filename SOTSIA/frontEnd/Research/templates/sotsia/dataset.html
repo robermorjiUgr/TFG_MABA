@@ -18,15 +18,16 @@
             </div>
         {% endif %}
         <h1>Configure Dataset</h1>
-        <h2>Database</h2>
-        <select class="db-selector" name="select_database" required>
-            <option class="db-selector-item" hidden>Select a Database</option>
-            {% for item in databases %}
-                <option class="db-selector-item" value="{{ item|space_underscore|lower }}">{{ item }}</option>
-            {% endfor %}
-        </select>
         <form action="#" method="post" class="dataset-form">
             {% csrf_token %}
+            <div class="database-form">
+                <h2>Database</h2>
+                <select id="select-database" class="db-selector" name="select_database" required>
+                    {% for item in databases %}
+                        <option class="db-selector-item" value="{{ item }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="dates-form">
                 <h2>Time Interval</h2>
                 <div class="dates-form-inputs">
@@ -42,20 +43,75 @@
             </div>
             <div class="types-form">
                 <h2>Types</h2>
-                <div class="types-labels">
-                {% for item in types %}
-                    <label class="types-label-item">
-                        <input type="checkbox" id="cbox{{ forloop.counter }}" value="{{item}}" name="types">
-                        {{ item }}
-                    </label>
-                {% endfor %}
-                </div>
+                <div class="types-labels" id="database-keys"></div>
             </div>
             <button class="submit-btn" type="submit">Create Dataset</button>
         </form>
         
     </section>
     <script>
+        // Change the database information
+        let select = document.getElementById("select-database");
+        let db_keys_container = document.getElementById("database-keys");
+        var obj = "{{ db_keys | safe }}";
+        // We have to convert it to a String object and change the format so JSON can parse it -> '{"field": "value"}'
+        obj = obj.toString();
+        obj = obj.replace(/'/g, '"');
+        var objJson = JSON.parse(obj);
+
+        //When loading the page, the capacity must be written with the first database
+        window.onload = function() {
+            value = select.value;
+            let divNode, labelNode, inputNode;
+            while (db_keys_container.firstChild) {
+                db_keys_container.removeChild(db_keys_container.firstChild);
+            }
+            for (let i = 0; i < objJson[value].length; i++) {
+                divNode = document.createElement("div");
+                divNode.className = "checkbox-container";
+
+                labelNode = document.createElement("label");
+                labelNode.className = "types-label-item";
+                labelNode.innerText = objJson[value][i];
+
+                inputNode = document.createElement("input");
+                inputNode.type = "checkbox";
+                inputNode.name = "types";
+                inputNode.id = "cbox" + (i+1);
+                inputNode.value = objJson[value][i];
+
+                divNode.appendChild(inputNode);
+                divNode.appendChild(labelNode);
+                db_keys_container.appendChild(divNode);
+            }
+        };
+
+        select.addEventListener("change", (e) => {
+            value = select.value;
+            let divNode, labelNode, inputNode;
+            while (db_keys_container.firstChild) {
+                db_keys_container.removeChild(db_keys_container.firstChild);
+            }
+            for (let i = 0; i < objJson[value].length; i++) {
+                divNode = document.createElement("div");
+                divNode.className = "checkbox-container";
+
+                labelNode = document.createElement("label");
+                labelNode.className = "types-label-item";
+                labelNode.innerText = objJson[value][i];
+
+                inputNode = document.createElement("input");
+                inputNode.type = "checkbox";
+                inputNode.name = "types";
+                inputNode.id = "cbox" + (i+1);
+                inputNode.value = objJson[value][i];
+
+                divNode.appendChild(inputNode);
+                divNode.appendChild(labelNode);
+                db_keys_container.appendChild(divNode);
+            }
+        });
+
         $("#form-id").submit(function(){
             if(invalid){
                 //Suppress form submit

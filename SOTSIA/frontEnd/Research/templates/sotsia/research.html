@@ -9,10 +9,9 @@
 {% block content_dash %}
     <section class="research-page">
         <h1>Research</h1>
-        <select class="research-selector db-selector" name="select_database" required>
-            <option class="db-selector-item" hidden>Select a Database</option>
+        <select id="select-database" class="research-selector db-selector" name="select_database" required>
             {% for item in databases %}
-                <option class="db-selector-item" value="{{ item|space_underscore|lower }}">{{ item }}</option>
+                <option class="db-selector-item" value="{{ item }}">{{ item }}</option>
             {% endfor %}
         </select>
         <div class="research-cards">
@@ -20,7 +19,7 @@
                 <div class="card-info">
                     <div class="card-text">
                         <h2 class="card-title">Capacity</h2>
-                        <span class="card-value">{{ db_size|floatformat:"2" }}MB</span>
+                        <span class="card-value" id="capacity-value">-MB</span>
                     </div>
                     <i class="fas fa-database"></i>
                 </div>
@@ -126,6 +125,26 @@
     </section>
 
     <script>
+        // Change the database information
+        let select = document.getElementById("select-database");
+        let size_database = document.getElementById("capacity-value");
+        var obj = "{{ db_size | safe }}";
+        // We have to convert it to a String object and change the format so JSON can parse it -> '{"field": "value"}'
+        obj = obj.toString();
+        obj = obj.replace(/'/g, '"');
+        var objJson = JSON.parse(obj);
+
+        // When loading the page, the capacity must be written with the first database
+        window.onload = function() {
+            value = select.value;
+            size_database.innerText = objJson[value] + "MB";
+        };
+
+        select.addEventListener("change", (e) => {
+            value = select.value;
+            size_database.innerText = objJson[value] + "MB";
+        });
+
         // Labels for the months of the year 
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     

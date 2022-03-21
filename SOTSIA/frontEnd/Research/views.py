@@ -33,14 +33,19 @@ def research(request):
     one_week_ago = make_aware(datetime.now() - timedelta(days=7))
 
     # Database names
-    result = api_request('get-db-names')
-    dbs_list = result.json()['databases']
-    args['databases'] = dbs_list
-
-    # Database size
-    result = api_request('ICPE/get-size')
-    size_mb = result.json()['total_size'] / (1024*1024)
-    args['db_size'] = size_mb
+    result = api_request('get-db-names-sizes')
+    res_json = result.json()['db_sizes']
+    key_list = []
+    print(res_json[0].keys())
+    for key in res_json[0].keys(): 
+        key_list.append(key)
+        try:
+            # Database size with 2 decimals only (MB)
+            res_json[0][key] = "{:.2f}".format(res_json[0][key] / (1024*1024))
+        except:
+            print("Error")
+    args['databases'] = key_list
+    args['db_size'] = res_json[0]
 
     args['scientists'] = User.objects.count()
     users_this_week = User.objects.filter(date_joined__gte=one_week_ago, date_joined__lt=now).count()
@@ -71,21 +76,22 @@ def dataset(request):
     args = {}
     args['message'] = ''
 
-    # Databases
-    result = api_request('get-db-names')
-    dbs_list = result.json()['databases']
-    args['databases'] = dbs_list
-
-    # Types
-    result = api_request('ICPE/get-collection-keys')
-    types_list = result.json()['keys']
-    args['types'] = types_list
+    # Database names and keys
+    result = api_request('get-db-names-meta')
+    res_json = result.json()['meta_keys']
+    key_list = []
+    print(res_json[0].keys())
+    for key in res_json[0].keys(): 
+        key_list.append(key)
+    print(key_list)
+    args['databases'] = key_list
+    args['db_keys'] = res_json[0]
 
     if request.method == "POST":
         args['message'] = ''
+        database = request.POST.get('select_database', '')
         types = request.POST.getlist('types', '')
         types_list = ''
-        print(request.POST.get('start_date', ''))
         start_date = request.POST.get('start_date', '')
         end_date = request.POST.get('end_date', '')
         if date_is_valid(start_date) and date_is_valid(end_date):
@@ -108,7 +114,7 @@ def dataset(request):
                     args['message'] = 'The dataset has been correctly created'
                     args['message_type'] = 'correct'
                     # Create the model and save it
-                    dataset = DatasetConfiguration(database="Resources and Energy", start_date=start_date, end_date=end_date, author=request.user.username, types_selected=types_list)
+                    dataset = DatasetConfiguration(database=database, start_date=start_date, end_date=end_date, author=request.user.username, types_selected=types_list)
                     dataset.save()
             else:
                 args['message'] = 'The starting date must be before the ending date'
