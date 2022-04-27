@@ -1,10 +1,11 @@
 from urllib import request
-from flask import jsonify
+from flask import jsonify, send_file
 from flask import Blueprint
 from flask_restx import Api, Resource
 import pandas as pd
 import json
 import numpy as np
+import matplotlib.pyplot as plt
 
 sotsia_bp = Blueprint('sotsia', __name__)
 api = Api( sotsia_bp )
@@ -93,21 +94,128 @@ class get_all_meta_keys(Resource):
           print("Connection failed")
     return jsonify(databases_keys)
 
-# @ns_sotsia.route('/machine-learning/xgboost', endpoint="machine_learning_xgboost")
-# @ns_sotsia.doc(description="Experiment with the XGBoost algorithm")
-# class machine_learning_xgboost(Resource):
-#   def get(self):
-#     from pandas import DataFrame
-#     try:
-#       db = client['ICPE']
-#       print("Connected to database: ICPE")
-#       collection = db.data
-#       data = collection.find()
-#       print(data)
-#       list_cur = list(data)
-#       df = DataFrame(list_cur)
-#       print(df.head())
-#     except:
-#       print("Connection failed")
+@ns_sotsia.route('/deep-learning/lstm', endpoint="deep_learning_lstm")
+@ns_sotsia.doc(description="Experiment with the Long Short-Term Memory (LSTM) network algorithm")
+class deep_learning_lstm(Resource):
+  def get(self):
+    from pandas import DataFrame
+    from app.lib import lstm, lstm_algorithm
+    result = {"result": ""}
+    try:
+      db = client['ICPE']
+      print("Connected to database: ICPE")
+      collection = db.actualizada    # CAMBIAR!! Primero lo hacemos con una colección más pequeña (prueba) para evitarnos tiempos muy largos
+      dataMongo = collection.find()
+      list_cur = list(dataMongo)
+      data = DataFrame(list_cur)
 
-#     return jsonify({'hello': 'ok'})
+      bytes_img = lstm_algorithm.lstm(data)
+
+      return send_file(bytes_img, attachment_filename='plot.png', mimetype='image/png')
+      print(encoded)
+      print()
+      from base64 import decodebytes
+      
+      
+      return encoded
+      
+      result["result"] = "OK"
+    except:
+      print("Error encountered")
+      result["result"] = "ERROR"
+
+    return jsonify(result)
+
+@ns_sotsia.route('/machine-learning/xgboost', endpoint="machine_learning_xgboost")
+@ns_sotsia.doc(description="Experiment with the XGBoost algorithm")
+class machine_learning_xgboost(Resource):
+  def get(self):
+    from pandas import DataFrame
+    from sklearn.metrics import mean_squared_error
+    try:
+      db = client['ICPE']
+      print("Connected to database: ICPE")
+      collection = db.prueba
+      dataMongo = collection.find()
+      list_cur = list(dataMongo)
+      data = DataFrame(list_cur)
+      print("Dataframe created correctly")
+      print(data.head())
+      #data.info()
+      X, y = data.iloc[:,:-1],data.iloc[:,-1]
+      print("iloc")
+      print(X)
+
+      print(y)
+     # data_dmatrix = xgb.DMatrix(data=X,label=y)
+      print("dmatrix")
+      from sklearn.model_selection import train_test_split
+      X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
+      print("train")
+      # xg_reg = xgb.XGBRegressor(objective ='reg:linear', colsample_bytree = 0.3, learning_rate = 0.1,
+      #           max_depth = 5, alpha = 10, n_estimators = 10)
+      # print("regression")
+      # xg_reg.fit(X_train,y_train)
+      # print("fit")
+      # preds = xg_reg.predict(X_test)
+      # print("pred")
+      # rmse = np.sqrt(mean_squared_error(y_test, preds))
+      # print("RMSE: %f" % (rmse))
+    except:
+      print("Connection failed")
+
+    return jsonify({'hello': 'ok'})
+
+
+@ns_sotsia.route('/plot-dataset', endpoint="plot_dataset")
+@ns_sotsia.doc(description="Plot the data of the dataset")
+class plot_dataset(Resource):
+  def get(self):
+    from pandas import DataFrame
+    try:
+      db = client['ICPE']
+      print("Connected to database: ICPE")
+      collection = db.actualizada
+      dataMongo = collection.find()
+      list_cur = list(dataMongo)
+      data = DataFrame(list_cur)
+      print("Dataframe created correctly")
+      print(data.head())
+      
+      # Filtrar por type
+      data = data.loc[data['Type']=='E']
+
+      # Obtenemos lista de los sensores que hay en el dataset
+      list_sensors = data.ID_Sensor.unique()
+
+      from random import randint
+      # Sacamos gráfica de cada sensor
+      for sensor in list_sensors:
+        # Filtramos el dataset para obtener sólo los datos del sensor correspondiente
+        data_sensor = data.loc[data['ID_Sensor']==sensor]
+        # Ordenamos por fecha para que no se pinte la gráfica mal
+        data_sensor = data_sensor.sort_values(by='date')
+        # Obtenemos el valor de la columna date
+        date = data_sensor['date']
+        # Convertimos a numpy array para que la pinte sin problema
+        date = date.to_numpy()
+        values = data_sensor['value']
+        values = values.to_numpy()
+        # Obtenemos un color aleatorio para diferenciar mejor
+        color = '#%06X' % randint(0, 0xFFFFFF)
+        plt.plot(date, values, color=color, label=sensor)
+      
+      plt.title('ICPE - Sensors values')
+      plt.xlabel('Date')
+      plt.ylabel('Values')
+      plt.legend()
+
+      import io
+      bytes_image = io.BytesIO()
+      plt.savefig(bytes_image, format="png")
+      bytes_image.seek(0)
+      return send_file(bytes_image, attachment_filename='plot.png', mimetype='image/png')
+    except:
+      print("Connection failed")
+
+    return jsonify({'hello': 'ok'})
