@@ -53,6 +53,8 @@
         // Change the database information
         let select = document.getElementById("select-database");
         let db_keys_container = document.getElementById("database-keys");
+        let start_date = document.getElementById("start-date-input");
+        let end_date = document.getElementById("end-date-input");
         var obj = "{{ db_keys | safe }}";
         // We have to convert it to a String object and change the format so JSON can parse it -> '{"field": "value"}'
         obj = obj.toString();
@@ -84,6 +86,10 @@
                 divNode.appendChild(labelNode);
                 db_keys_container.appendChild(divNode);
             }
+            // We take the min and max dates in the database to disable all the dates that go out of range
+            start_date.min = end_date.min = start_date.value = "{{ min_date | safe }}";
+            start_date.max = end_date.max = end_date.value = "{{ max_date | safe }}";
+            // Correct format --> "2022-05-14"
         };
 
         select.addEventListener("change", (e) => {

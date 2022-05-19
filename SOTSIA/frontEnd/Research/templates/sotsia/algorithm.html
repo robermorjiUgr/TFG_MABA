@@ -19,7 +19,7 @@
 {% block content_dash %}
   	<section class="algorithm-page">
 		<h1>{{ algorithm }} Algorithm</h1>
-        <select class="db-selector" name="algorithm_database" required>
+        <select id="select-database" class="db-selector" name="algorithm_database" required>
             {% for item in databases %}
                 <option class="db-selector-item" value="{{ item|space_underscore|lower }}">{{ item }}</option>
             {% endfor %}
@@ -28,36 +28,49 @@
 			<table id="algorithm-table" class="table table-striped">
 				<thead>
 					<tr class="table-header">
-						<th class="th-item">Dataset</th>
-						<th class="th-item">Types Selected</th>
-						<th class="th-item">Start Date</th>
-						<th class="th-item">End Date</th>
-						<th class="th-item">Testing</th>
+						<th class="th-item dataset_column">Dataset</th>
+						<th class="th-item types_column">Types Selected</th>
+						<th class="th-item database_column">Database</th>
+						<th class="th-item dates_column">Start Date</th>
+						<th class="th-item dates_column">End Date</th>
+						<th class="th-item experimentation_column">Testing</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for item in datasets %}
 						<tr class="table-row">
-							<td class="td-item">{{ forloop.counter }}</td>
-							<td class="td-item">{{ item.types_selected }}</td>
-							<td class="td-item">{{ item.start_date|date:"d M, Y" }}</td>
-							<td class="td-item">{{ item.end_date|date:"d M, Y" }}</td>
-							<td class="td-item">
+							<td class="td-item dataset_column">{{ forloop.counter }}</td>
+							<td class="td-item types_column">{{ item.types_selected }}</td>
+							<td class="td-item database_column">{{ item.database|space_underscore|lower }}</td>
+							<td class="td-item dates_column">{{ item.start_date|date:"d M, Y" }}</td>
+							<td class="td-item dates_column">{{ item.end_date|date:"d M, Y" }}</td>
+							<td class="td-item experimentation_column">
 								<a href="experimentation?dataset-id={{item.id}}" class="algorithm-research-btn">Start Experiment</a>
 							</td>
 						</tr>
 					{% endfor %}
 				</tbody>
 			</table>
+
+			<p id="select-result"></p>
 		</div>
   	</section>
 
 	<script>
 		$(document).ready(function () {
 			var rows_number = $('#algorithm-table .table-row').length
-
-			$('#algorithm-table').DataTable();
-			$('#algorithm-table_filter').remove();
+			
+			$('#algorithm-table').DataTable({
+				"columnDefs": [
+					{
+						"targets": [ 2 ],
+						"visible": false,
+						"searchable": true
+					}
+				]
+			} );
+			$('#algorithm-table').removeAttr("style");
+			$('#algorithm-table_filter').addClass('hidden');
 			$('#algorithm-table_length').remove();
 			$("#algorithm-table_info").addClass('table-paginate-info');
 			$("#algorithm-table_paginate").addClass('table-paginate-numbers');
@@ -70,6 +83,18 @@
 				$("#algorithm-table_info").remove();
 				$("#algorithm-table_paginate").remove();
 			}
+
+		// 	$('.table-row').addClass('hidden');
+
+		// 	let select = document.getElementById("select-database");
+		// 	select.addEventListener("change", (e) => {
+		// 		value = select.value;
+		// 		document.getElementById('select-result').innerHTML = value;
+		// 		let rows = document.getElementsByClassName(value);
+		// 		[].forEach.call(rows, function (row) {
+		// 			row.classList.remove("hidden");
+		// 		});
+        // });
 		});
 	</script>
 {% endblock %}

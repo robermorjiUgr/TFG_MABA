@@ -5,6 +5,11 @@
 {% block dash_item_reports %}active{% endblock dash_item_reports %}
 
 {% block content_dash %}
+	<div id="charging-screen">
+		<div id="charging">
+			<p>Está cargando...</p>
+		</div>
+	</div>
   	<section class="reports-page">
         <div class="breadcrumb">
 			<a href="/" class="breadcrumb-link"><i class="fas fa-home"></i></a>
@@ -15,6 +20,16 @@
 		</div>
 		<h1>Document {{ report_id }}</h1>
 		<p>{{ report.description }}</p>
+		{% load static %}
+		<img src="{% static image %}" alt="My image">
 		
   	</section>
+	  
+	<script>
+		window.onload = function(){
+			var container = document.getElementById('charging-screen');
+			container.style.visibility = 'hidden';
+			container.style.opacity = '0';
+		}
+	</script>
 {% endblock %}

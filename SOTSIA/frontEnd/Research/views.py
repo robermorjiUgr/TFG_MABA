@@ -8,6 +8,10 @@ from datetime import datetime, time, timedelta
 from django.utils.timezone import make_aware
 
 import requests
+from base64 import encodebytes, decodebytes
+import io
+from django.core.files.images import ImageFile
+
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -34,6 +38,7 @@ def research(request):
 
     # Database names
     result = api_request('get-db-names-sizes')
+    print(result)
     res_json = result.json()['db_sizes']
     key_list = []
     print(res_json[0].keys())
@@ -80,12 +85,18 @@ def dataset(request):
     result = api_request('get-db-names-meta')
     res_json = result.json()['meta_keys']
     key_list = []
-    print(res_json[0].keys())
     for key in res_json[0].keys(): 
         key_list.append(key)
-    print(key_list)
     args['databases'] = key_list
     args['db_keys'] = res_json[0]
+
+    # Min and Max dates
+    result = api_request('/ICPE/get-min-max-date')
+    # Get the date in datetime format so the template doesn't read it as a string
+    min_date = datetime.strptime(result.json()['min_date'], "%a, %d %b %Y %H:%M:%S %Z").date()
+    args['min_date'] = min_date
+    max_date = datetime.strptime(result.json()['max_date'], "%a, %d %b %Y %H:%M:%S %Z").date()
+    args['max_date'] = max_date
 
     if request.method == "POST":
         args['message'] = ''
@@ -114,7 +125,13 @@ def dataset(request):
                     args['message'] = 'The dataset has been correctly created'
                     args['message_type'] = 'correct'
                     # Create the model and save it
-                    dataset = DatasetConfiguration(database=database, start_date=start_date, end_date=end_date, author=request.user.username, types_selected=types_list)
+                    dataset = DatasetConfiguration(
+                                database=database, 
+                                start_date=start_date, 
+                                end_date=end_date, 
+                                author=request.user.username, 
+                                types_selected=types_list
+                    )
                     dataset.save()
             else:
                 args['message'] = 'The starting date must be before the ending date'
@@ -145,6 +162,7 @@ def algorithm(request):
     args = {}
 
     result = api_request('get-db-names')
+    print(result)
     dbs_list = result.json()['databases']
     args['databases'] = dbs_list
 
@@ -176,21 +194,15 @@ def experimentation(request):
     if request.build_absolute_uri().find("deep-learning") != -1:
         parent = '/deep-learning'
         algorithm = 'Deep Learning'
-        args['specific_algorithms'].append('Algorithm 1')
-        args['specific_algorithms'].append('Algorithm 2')
-        args['specific_algorithms'].append('Algorithm 3')
+        args['specific_algorithms'].append('LSTM')
     elif request.build_absolute_uri().find("data-mining") != -1:
         parent = '/data-mining'
         algorithm = 'Data Mining'
         args['specific_algorithms'].append('Algorithm 1')
-        args['specific_algorithms'].append('Algorithm 2')
-        args['specific_algorithms'].append('Algorithm 3')
     elif request.build_absolute_uri().find("machine-learning") != -1:
         parent = '/machine-learning'
         algorithm = 'Machine Learning'
-        args['specific_algorithms'].append('Algorithm 1')
-        args['specific_algorithms'].append('Algorithm 2')
-        args['specific_algorithms'].append('Algorithm 3')
+        args['specific_algorithms'].append('Support Vector Machine')
     args['algorithm'] = algorithm
     args['parent'] = parent
 
@@ -203,15 +215,43 @@ def experimentation(request):
     if request.method == "POST":
         args['message'] = ''
         algorithm_specific = request.POST.get('select_algorithm', '')
-        description=request.POST.get('description', '')
-        experiment = Experiment(
-            algorithm_group=algorithm, 
-            algorithm_specific=algorithm_specific, 
-            start_date=datetime.now(),
-            description=description,
-            duration=time(0, 2, 45), 
-            dataset=dataset)
-        experiment.save()
+        description = request.POST.get('description', '')
+        database = dataset.database
+        start_date = dataset.start_date
+        end_date = dataset.end_date
+
+        if algorithm_specific == 'lstm':
+            start_date = start_date.strftime('%Y-%m-%d')
+            end_date = end_date.strftime('%Y-%m-%d')
+            url = 'deep-learning/lstm/{}?start_date={}&end_date={}&id_sensor=9093'.format(database, start_date, end_date)
+            print(url)
+            # start = time()
+            result = api_request(url)
+            # end = time.time()
+            # total_time = start - end
+
+            if result==None or result=='Error':
+                args['message'] = 'There was an error during the execution'
+                args['message_type'] = 'error'
+                print(result.content)
+            else:
+                args['message'] = 'The experiment was a success'
+                args['message_type'] = 'correct'
+                #print(result.content)
+                experiment_number = Experiment.objects.count() + 1
+                image = ImageFile(io.BytesIO(result.content), name='LSTM_exp_{}.jpg'.format(experiment_number))
+                experiment = Experiment(
+                    database=dataset.database,
+                    algorithm_group=algorithm, 
+                    algorithm_specific=algorithm_specific, 
+                    start_date=datetime.now(),
+                    description=description,
+                    duration=time(0, 2, 45), 
+                    dataset=dataset,
+                    result=image
+                    )
+                print(experiment)
+                experiment.save()
 
     return render(request, 'sotsia/experimentation.html', args)
 
@@ -219,8 +259,10 @@ def experimentation(request):
 @login_required(login_url='/login/')
 def document(request, id):
     args = {}
+
     report = get_object_or_404(Experiment, pk=id)
     args['report_id'] = report.id
     args['report'] = report
+    args['image'] = str(report.result).split("static/",1)[1]
 
     return render(request, 'sotsia/document.html', args)

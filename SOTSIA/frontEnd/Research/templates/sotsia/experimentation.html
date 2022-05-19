@@ -32,7 +32,7 @@
 			<li class="dataset-info-item"><strong>Start date:</strong> {{ dataset.start_date|date:"d F, Y" }}</li>
 			<li class="dataset-info-item"><strong>End date:</strong> {{ dataset.end_date|date:"d F, Y" }}</li>
 			<li class="dataset-info-item"><strong>Types selected:</strong>
-				<ul>
+				<ul class="multicolumn-list">
 					{% for item in dataset_types %}
 						<li>{{item}}</li>
 					{% endfor %}

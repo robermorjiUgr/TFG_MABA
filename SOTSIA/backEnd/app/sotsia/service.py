@@ -6,6 +6,10 @@ import pandas as pd
 import json
 import numpy as np
 import matplotlib.pyplot as plt
+from pandas import DataFrame
+from base64 import encode, encodestring, decodestring
+from flask import request
+
 
 sotsia_bp = Blueprint('sotsia', __name__)
 api = Api( sotsia_bp )
@@ -27,7 +31,10 @@ class get_db_names(Resource):
     return jsonify({'databases': databases})
 
 @ns_sotsia.route('/<database>/get-collection-keys', endpoint="get_collection_keys")
-@ns_sotsia.doc(description="Get a list with the names of all the key names in the collection data")
+@ns_sotsia.doc(
+  description="Get a list with the names of all the key names in the collection data",
+  params={'database': 'The name of the database'}
+)
 class get_collection_keys(Resource):
   def get(self, database):
     meta_keys = []
@@ -43,7 +50,10 @@ class get_collection_keys(Resource):
     return jsonify({'keys': meta_keys})
 
 @ns_sotsia.route('/<database>/get-size', endpoint="get_size")
-@ns_sotsia.doc(description="Get the size of the data collection given a database name")
+@ns_sotsia.doc(
+  description="Get the size of the data collection given a database name",
+  params={'database': 'The name of the database'}
+)
 class get_database_size(Resource):
   def get(self, database):
     size = 0
@@ -55,6 +65,29 @@ class get_database_size(Resource):
       print("Connection failed")
 
     return jsonify({'total_size': size})
+
+@ns_sotsia.route('/<database>/get-min-max-date', endpoint="get_min_max_date")
+@ns_sotsia.doc(
+  description="Get the min and max date of the database",
+  params={'database': 'The name of the database'}
+)
+class get_min_max_date(Resource):
+  def get(self, database):
+    min_date = max_date = 0
+    try:
+      db = client[database]
+      print("Connected to database: " + database)
+      collection = db.actualizada    # CAMBIAR!! Primero lo hacemos con una colección más pequeña (prueba) para evitarnos tiempos muy largos
+      dataMongo = collection.find()
+      list_cur = list(dataMongo)
+      data = DataFrame(list_cur)
+      data = data.sort_values(by='date')
+      min_date = data['date'].iloc[1]
+      max_date = data['date'].iloc[-1]
+    except:
+      print("Connection failed")
+
+    return jsonify({'min_date': min_date, 'max_date': max_date})
 
 @ns_sotsia.route('/get-db-names-sizes', endpoint="get_db_names_sizes")
 @ns_sotsia.doc(description="Get a list with the database name and its size")
@@ -94,32 +127,52 @@ class get_all_meta_keys(Resource):
           print("Connection failed")
     return jsonify(databases_keys)
 
-@ns_sotsia.route('/deep-learning/lstm', endpoint="deep_learning_lstm")
-@ns_sotsia.doc(description="Experiment with the Long Short-Term Memory (LSTM) network algorithm")
+@ns_sotsia.route('/deep-learning/lstm/<database>', endpoint="deep_learning_lstm")
+@ns_sotsia.doc(
+  description="Experiment with the Long Short-Term Memory (LSTM) network algorithm",
+  params={
+    'dataset': 'Dataset parameters with the form key1=value1&key2=value2&...&keyn=valuen',
+    'id_sensor': 'ID of the sensor to apply in the LSTM algorithm'
+  }
+)
 class deep_learning_lstm(Resource):
-  def get(self):
-    from pandas import DataFrame
+  def get(self, database):
     from app.lib import lstm, lstm_algorithm
+    from datetime import datetime
     result = {"result": ""}
     try:
-      db = client['ICPE']
-      print("Connected to database: ICPE")
+      db = client[database]
+      print("Connected to database: " + database)
       collection = db.actualizada    # CAMBIAR!! Primero lo hacemos con una colección más pequeña (prueba) para evitarnos tiempos muy largos
-      dataMongo = collection.find()
+      # GET the arguments passed in the url query
+      args = request.args
+      start_date = args.get("start_date", type=str)
+      end_date = args.get("end_date", type=str)
+      id_sensor = args.get("id_sensor", type=int)
+
+      # Parse to datetime type
+      start_date = datetime.strptime(start_date,'%Y-%m-%d')
+      end_date = datetime.strptime(end_date,'%Y-%m-%d')
+
+      # Get the filtered data
+      dataMongo = collection.find({
+        #'ID_Sensor': int(id_sensor),
+        'date': {
+          '$gte': start_date,
+          '$lte': end_date
+        }
+      })
+
       list_cur = list(dataMongo)
       data = DataFrame(list_cur)
 
-      bytes_img = lstm_algorithm.lstm(data)
+      bytes_img = lstm_algorithm.lstm(data, id_sensor)
+      encoded_img = encodestring(bytes_img.getvalue()) # encode as base64
+      
+      # result = {"result": encoded_img.decode(encoding='utf-8')}
+      # return result
 
       return send_file(bytes_img, attachment_filename='plot.png', mimetype='image/png')
-      print(encoded)
-      print()
-      from base64 import decodebytes
-      
-      
-      return encoded
-      
-      result["result"] = "OK"
     except:
       print("Error encountered")
       result["result"] = "ERROR"
@@ -219,3 +272,51 @@ class plot_dataset(Resource):
       print("Connection failed")
 
     return jsonify({'hello': 'ok'})
+
+
+@ns_sotsia.route('/<database>/update-meta-collection', endpoint="update_meta_collection")
+@ns_sotsia.doc(
+  description="Update the meta collection of the database",
+  params={'database': 'The name of the database'}
+)
+class update_meta_collection(Resource):
+  def get(self, database):
+    result = {"result": ""}
+    try:
+      db = client[database]
+      print("Connected to database: ICPE")
+      # Connect to the data collection
+      collection = db.actualizada
+      
+      # Get the max value of the column date
+      max_date = collection.find_one(sort=[("date", -1)])["date"]
+      # Get the minimum date value and format it correctly
+      min_date = collection.find_one(sort=[("date", 1)])["date"]
+
+      # Get all the keys of the collection using an aggregation
+      keys = collection.aggregate([ 
+        { "$project": { "arrayofkeyvalue": { "$objectToArray": "$$ROOT" } } }, 
+        { "$unwind": "$arrayofkeyvalue" }, 
+        { "$group": { "_id": None, "allkeys": { "$addToSet": "$arrayofkeyvalue.k" } } }
+      ])
+      # keys is a CommandCursor variable so we transform it into a DataFrame
+      list_cur = list(keys)
+      data = DataFrame(list_cur)
+      # Once it's a DataFrame, we get the first (and only) row and the column 'allkeys' 
+      keys = data.loc[0, 'allkeys']   # This is an array with all the keys (OK to return it with JSON)
+      
+
+      # Connect to the meta collection
+      collection = db.meta
+      # We drop the previous data
+      collection.drop()
+      # Insert the new meta data of the database
+      collection.insert_one({'keys': keys, 'min_date': min_date, 'max_date': max_date})
+
+      result["result"] = {'keys': keys, 'min_date': min_date, 'max_date': max_date}
+    except:
+      print("Error encountered")
+      result["result"] = "ERROR"
+
+    return jsonify(result)
+

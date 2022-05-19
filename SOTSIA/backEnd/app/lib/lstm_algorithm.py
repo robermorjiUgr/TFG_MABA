@@ -13,19 +13,19 @@ from keras.layers import Dropout
 import io
 
 # arg 'data' is a DataFrame with the dataset created by the scientist
-def lstm(data):
-    # Id_Sensor 9093 --> Heating
-    data_sensor = data.loc[data['ID_Sensor']==9093]
+# arg 'id_sensor' is the ID_Sensor of the sensor choosen by the userz
+def lstm(data, id_sensor):
+    # Select only the data related to the sensor selected by the user
+    data_sensor = data.loc[data['ID_Sensor']==int(id_sensor)]
     # We choose the column of 'value' because is the one that has the information that will be used in the LSTM algorithm
     #   - In order to prevent future errors, all databases used must have this 'value' column
     #   - The loc method convert the DataFrame into a Series object
     data_sensor = data_sensor.sort_values(by='timestamp')
     training_set = data_sensor.loc[:, 'value']
-    time = data_sensor.loc[:, 'timestamp']
-    # # We need a DataFrame to use the fit transform of the MinMaxScaler
+    time = data_sensor.loc[:, 'date']
+    # We need a DataFrame to use the fit transform of the MinMaxScaler
     training_set = training_set.to_frame()
     time = time.to_frame()
-    # print(type(training_set))
     # Scaling the data with a range [0,1] and fit the training_set
     sc = MinMaxScaler(feature_range = (0, 1))
     X = sc.fit_transform(training_set)
@@ -62,10 +62,10 @@ def lstm(data):
     predicted_values = sc.inverse_transform(predicted_values)
     X_test = sc.inverse_transform(X_test)
     y_test = sc.inverse_transform(y_test)
-    print(type(X_test))
     # Plot the result
     #plt.xticks(rotation='vertical')
     # Plot the real values of the dataset
+    plt.close()
     plt.plot(y_test, X_test, color = 'black', label = 'Real Values')
     # Plot our prediction
     plt.plot(y_test, predicted_values, color = 'green', label = 'Predicted Values')
