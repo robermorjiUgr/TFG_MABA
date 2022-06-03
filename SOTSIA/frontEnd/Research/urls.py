@@ -13,4 +13,5 @@ urlpatterns = [
     path('machine-learning/', views.algorithm, name='machine-learning'),
     path('machine-learning/experimentation', views.experimentation, name='machine-learning-experimentation'),
     path('reports/<int:id>/', views.document, name='document'),
+    path('reports/<int:id>/pdf', views.generate_pdf, name='generate-pdf'),
 ]

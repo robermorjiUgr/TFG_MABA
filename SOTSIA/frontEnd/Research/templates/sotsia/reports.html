@@ -11,30 +11,39 @@
 			<p>List of all the reports of the experiments carried out.</p>
 		</div>
 		<div class="reports-table">
-			<table id="my-reports-table" class="table table-striped">
-				<thead>
-					<tr class="table-header">
-						<th class="th-item">Database</th>
-						<th class="th-item">Algorithm</th>
-						<th class="th-item">Description</th>
-						<th class="th-item">Start Date</th>
-						<th class="th-item">Duration</th>
-						<th class="th-item">Report</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for item in experiments %}
-						<tr class="table-row">
-							<td class="td-item">{{ item.dataset.database }}</td>
-							<td class="td-item">{{ item.algorithm_group }}</td>
-							<td class="td-item">{{ item.description }}</td>
-							<td class="td-item">{{ item.start_date|date:"d M, Y" }}</td>
-							<td class="td-item">{{ item.duration|date:'H:i:s' }}</td>
-							<td class="td-item"><a href="{{item.id}}" class="algorithm-research-btn">Document</a></td>
+			<form id="delete-reports" method="POST" action="#delete" enctype="multipart/form-data">
+				{% csrf_token %}
+				<input class="btn-primary" type="submit" value="Delete selected" 
+					onclick="return confirm('Do you really want to delete the reports selected?');"
+				/>
+				<table id="my-reports-table" class="table table-striped">
+					<thead>
+						<tr class="table-header">
+							<th class="th-item database_column">Database</th>
+							<th class="th-item database_column">Algorithm</th>
+							<th class="th-item description_column">Description</th>
+							<th class="th-item dates_column">Start Date</th>
+							<th class="th-item dates_column">Duration</th>
+							<th class="th-item">Report</th>
 						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						{% for item in experiments %}
+							<tr class="table-row">
+								<td class="td-item database_column">{{ item.dataset.database }}</td>
+								<td class="td-item database_column">{{ item.algorithm_group }}</td>
+								<td class="td-item description_column td-overflow">{{ item.description }}</td>
+								<td class="td-item">{{ item.start_date|date:"d M, Y" }}</td>
+								<td class="td-item">{{ item.duration|date:'H:i:s' }}</td>
+								<td class="td-item experimentation_column"><a href="{{item.id}}" class="algorithm-research-btn">Document</a></td>
+								<td class="td-item delete-checkbox">
+									<input type="checkbox" name="delete" value={{item.id}}>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</form>
 		</div>
   	</section>
 

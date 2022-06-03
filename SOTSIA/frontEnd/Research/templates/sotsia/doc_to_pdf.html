@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}Document {{report.id}}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">    
+    
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+    <script src="{% static 'js/all.min.js' %}"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <style>
+        @page {
+            size: "A4";
+            margin: 1.0cm 1.5cm 3.5cm 1.5cm;
+        }
+        body {
+            width: 100% !important;
+            height: 100%;
+            background: #fff;
+            color: black;
+            font-size: 100%;
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: none; 
+        }
+        
+    </style>
+    
+    {% block js_content %}{% endblock %}
+
+</head>
+<body>
+    <section class="reports-page">
+        <h1>Document {{ report.id }}</h1>
+		<h2>Information of the experiment</h2>
+		<ul>
+			<li><strong>Database: </strong>{{report.database}}</li>
+			<li><strong>Algorithm: </strong>{{report.algorithm_group}} ({{report.algorithm_specific}})</li>
+			<li><strong>Start date: </strong>{{report.start_date}}</li>
+			<li><strong>Duration: </strong>
+				{{report.duration| date:'i'}}' {{report.duration| date:'s'}}''
+			</li>
+		</ul>
+		<h2>Results and description</h2>
+		<p>{{ report.description }}</p>
+		<img src="{{image}}" alt="Prediction of the data">
+  	</section>
+</body>
+</html>

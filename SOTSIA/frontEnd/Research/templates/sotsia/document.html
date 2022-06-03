@@ -1,35 +1,41 @@
 {% extends "base_dashboard.html" %}
 
-{% block title %}Document{% endblock %}
+{% block title %}Document {{report.id}}{% endblock %}
 
 {% block dash_item_reports %}active{% endblock dash_item_reports %}
 
 {% block content_dash %}
-	<div id="charging-screen">
-		<div id="charging">
-			<p>Está cargando...</p>
-		</div>
-	</div>
   	<section class="reports-page">
-        <div class="breadcrumb">
-			<a href="/" class="breadcrumb-link"><i class="fas fa-home"></i></a>
-			<i class="fas fa-angle-right"></i>
-			<a href="/reports" class="breadcrumb-link">Reports</a>
-			<i class="fas fa-angle-right"></i>
-			<span class="breadcrumb-current">Document {{ report_id }}</span>
-		</div>
-		<h1>Document {{ report_id }}</h1>
-		<p>{{ report.description }}</p>
-		{% load static %}
-		<img src="{% static image %}" alt="My image">
-		
+		{% if message %}
+			<div class="dataset-message">
+				{% if message_type == 'error' %}
+					<p><i class="fas fa-exclamation-circle"></i> {{ message }}</p>
+				{% elif message_type == 'correct' %}
+					<p><i class="fas fa-check-circle"></i> {{ message }}</p>
+				{% endif %}
+			</div>
+		{% endif %}
+		{% if access %}
+			<div class="breadcrumb">
+				<a href="/" class="breadcrumb-link"><i class="fas fa-home"></i></a>
+				<i class="fas fa-angle-right"></i>
+				<a href="/reports" class="breadcrumb-link">Reports</a>
+				<i class="fas fa-angle-right"></i>
+				<span class="breadcrumb-current">Document {{ report.id }}</span>
+			</div>
+			<h1>Document {{ report.id }}</h1>
+			<h2>Information of the experiment</h2>
+			<ul>
+				<li><strong>Database: </strong>{{report.database}}</li>
+				<li><strong>Algorithm: </strong>{{report.algorithm_group}} ({{report.algorithm_specific}})</li>
+				<li><strong>Start date: </strong>{{report.start_date}}</li>
+				<li><strong>Duration: </strong>
+					{{report.duration| date:'i'}}' {{report.duration| date:'s'}}''
+				</li>
+			</ul>
+			<h2>Results and description</h2>
+			<p>{{ report.description }}</p>
+			<img src="{{image}}" alt="Prediction of the data">
+		{% endif %}
   	</section>
-	  
-	<script>
-		window.onload = function(){
-			var container = document.getElementById('charging-screen');
-			container.style.visibility = 'hidden';
-			container.style.opacity = '0';
-		}
-	</script>
 {% endblock %}

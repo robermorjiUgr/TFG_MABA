@@ -25,36 +25,46 @@
 			<i class="fas fa-angle-right"></i>
 			<span class="breadcrumb-current">Experimentation</span>
 		</div> -->
-		<h1>{{ algorithm }} Experimentation</h1>
-		<h2 class="experiment-header">Dataset Information</h2>
-		<ul class="dataset-info">
-			<li class="dataset-info-item"><strong>Database:</strong> {{ dataset.database }}</li>
-			<li class="dataset-info-item"><strong>Start date:</strong> {{ dataset.start_date|date:"d F, Y" }}</li>
-			<li class="dataset-info-item"><strong>End date:</strong> {{ dataset.end_date|date:"d F, Y" }}</li>
-			<li class="dataset-info-item"><strong>Types selected:</strong>
-				<ul class="multicolumn-list">
-					{% for item in dataset_types %}
-						<li>{{item}}</li>
-					{% endfor %}
-				</ul>
-			</li>
-		</ul>
-		<form action="#" method="post" class="experimentation-form">
-            {% csrf_token %}
-			<div class="algorithm-selection">
-				<h2 class="experiment-header">Specific Algorithm</h2>
-				<select class="algorithm-selector" name="select_algorithm" required>
-					{% for item in specific_algorithms %}
-						<option class="algorithm-selector-item" value="{{ item|space_underscore|lower }}">{{ item }}</option>
-					{% endfor %}
-				</select>
-			</div>
-			<div class="description">
-				<h2 class="experiment-header">Description</h2>
-				<textarea rows="4" cols="50" name="description" placeholder="Add a description" class="description-textarea" required></textarea>
-			</div>
-            <button class="submit-btn" type="submit">Start Experiment!</button>
-		</form>
-
+		{% if message %}
+            <div class="dataset-message">
+                {% if message_type == 'error' %}
+                    <p><i class="fas fa-exclamation-circle"></i> {{ message }}</p>
+                {% elif message_type == 'correct' %}
+                    <p><i class="fas fa-check-circle"></i> {{ message }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+		{% if access %}
+			<h1>{{ algorithm }} Experimentation</h1>
+			<h2 class="experiment-header">Dataset Information</h2>
+			<ul class="dataset-info">
+				<li class="dataset-info-item"><strong>Database:</strong> {{ dataset.database }}</li>
+				<li class="dataset-info-item"><strong>Start date:</strong> {{ dataset.start_date|date:"d F, Y" }}</li>
+				<li class="dataset-info-item"><strong>End date:</strong> {{ dataset.end_date|date:"d F, Y" }}</li>
+				<li class="dataset-info-item"><strong>Types selected:</strong>
+					<ul class="multicolumn-list">
+						{% for item in dataset_types %}
+							<li>{{item}}</li>
+						{% endfor %}
+					</ul>
+				</li>
+			</ul>
+			<form action="#" method="post" class="experimentation-form">
+				{% csrf_token %}
+				<div class="algorithm-selection">
+					<h2 class="experiment-header">Specific Algorithm</h2>
+					<select class="algorithm-selector" name="select_algorithm" required>
+						{% for item in specific_algorithms %}
+							<option class="algorithm-selector-item" value="{{ item|space_underscore|lower }}">{{ item }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="description">
+					<h2 class="experiment-header">Description</h2>
+					<textarea rows="4" cols="50" name="description" placeholder="Add a description" class="description-textarea" required></textarea>
+				</div>
+				<button class="submit-btn" type="submit">Start Experiment!</button>
+			</form>
+		{% endif %}
   	</section>
 {% endblock %}

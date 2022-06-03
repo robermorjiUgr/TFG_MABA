@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from numpy import empty
 from .models import DatasetConfiguration, Experiment
 from django.shortcuts import get_object_or_404
 
@@ -9,9 +10,13 @@ from django.utils.timezone import make_aware
 
 import requests
 from base64 import encodebytes, decodebytes
-import io
+import io, os
 from django.core.files.images import ImageFile
 
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa  
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -154,6 +159,17 @@ def reports(request):
 
     args['experiments'] = experiments_list
 
+    if request.method == "POST":
+        delete_list = request.POST.getlist('delete')        
+        # Check if list is empty
+        if len(delete_list) != 0:
+            for report_id in delete_list:
+                report = Experiment.objects.get(id=report_id)
+                report.delete()
+        else:
+            print("You haven't checked any report")
+        return redirect('/reports/')
+
     return render(request, 'sotsia/reports.html', args)
 
 
@@ -161,10 +177,10 @@ def reports(request):
 def algorithm(request):
     args = {}
 
-    result = api_request('get-db-names')
-    print(result)
-    dbs_list = result.json()['databases']
-    args['databases'] = dbs_list
+    # result = api_request('get-db-names')
+    # print(result)
+    # dbs_list = result.json()['databases']
+    # args['databases'] = dbs_list
 
     algorithm = ''
     if request.build_absolute_uri().find("deep-learning") != -1:
@@ -181,6 +197,17 @@ def algorithm(request):
         if i.author == request.user.username:
             my_datasets.append(i)
     args['datasets'] = my_datasets
+
+    if request.method == "POST":
+        delete_list = request.POST.getlist('delete')        
+        # Check if list is empty
+        if len(delete_list) != 0:
+            for report_id in delete_list:
+                report = DatasetConfiguration.objects.get(id=report_id)
+                report.delete()
+        else:
+            print("You haven't checked any dataset")
+        return redirect('/deep-learning/')
 
     return render(request, 'sotsia/algorithm.html', args)
 
@@ -207,62 +234,102 @@ def experimentation(request):
     args['parent'] = parent
 
     dataset = get_object_or_404(DatasetConfiguration, pk=request.GET.get('dataset-id'))
-    args['dataset'] = dataset
-    types_list = dataset.types_selected.split('; ')
-    types_list[-1] = types_list[-1][:-1]            # Last item only have a ';', not '; '
-    args['dataset_types'] = types_list
+    if dataset.author == request.user.username:
+        args['access'] = 1
+        args['dataset'] = dataset
+        types_list = dataset.types_selected.split('; ')
+        types_list[-1] = types_list[-1][:-1]            # Last item only have a ';', not '; '
+        args['dataset_types'] = types_list
 
-    if request.method == "POST":
-        args['message'] = ''
-        algorithm_specific = request.POST.get('select_algorithm', '')
-        description = request.POST.get('description', '')
-        database = dataset.database
-        start_date = dataset.start_date
-        end_date = dataset.end_date
+        if request.method == "POST":
+            args['message'] = ''
+            algorithm_specific = request.POST.get('select_algorithm', '')
+            description = request.POST.get('description', '')
+            database = dataset.database
+            start_date = dataset.start_date
+            end_date = dataset.end_date
 
-        if algorithm_specific == 'lstm':
-            start_date = start_date.strftime('%Y-%m-%d')
-            end_date = end_date.strftime('%Y-%m-%d')
-            url = 'deep-learning/lstm/{}?start_date={}&end_date={}&id_sensor=9093'.format(database, start_date, end_date)
-            print(url)
-            # start = time()
-            result = api_request(url)
-            # end = time.time()
-            # total_time = start - end
+            if algorithm_specific == 'lstm':
+                start_date = start_date.strftime('%Y-%m-%d')
+                end_date = end_date.strftime('%Y-%m-%d')
+                url = 'deep-learning/lstm/{}?start_date={}&end_date={}&id_sensor=9093'.format(database, start_date, end_date)
+                print(url)
+                # start = time()
+                result = api_request(url)
+                # end = time.time()
+                # total_time = start - end
 
-            if result==None or result=='Error':
-                args['message'] = 'There was an error during the execution'
-                args['message_type'] = 'error'
-                print(result.content)
-            else:
-                args['message'] = 'The experiment was a success'
-                args['message_type'] = 'correct'
-                #print(result.content)
-                experiment_number = Experiment.objects.count() + 1
-                image = ImageFile(io.BytesIO(result.content), name='LSTM_exp_{}.jpg'.format(experiment_number))
-                experiment = Experiment(
-                    database=dataset.database,
-                    algorithm_group=algorithm, 
-                    algorithm_specific=algorithm_specific, 
-                    start_date=datetime.now(),
-                    description=description,
-                    duration=time(0, 2, 45), 
-                    dataset=dataset,
-                    result=image
-                    )
-                print(experiment)
-                experiment.save()
-
+                if result==None or result=='Error':
+                    args['message'] = 'There was an error during the execution'
+                    args['message_type'] = 'error'
+                    print(result.content)
+                else:
+                    args['message'] = 'The experiment was a success'
+                    args['message_type'] = 'correct'
+                    #print(result.content)
+                    experiment_number = Experiment.objects.count() + 1
+                    image = ImageFile(io.BytesIO(result.content), name='LSTM_exp_{}.jpg'.format(experiment_number))
+                    experiment = Experiment(
+                        database=dataset.database,
+                        algorithm_group=algorithm, 
+                        algorithm_specific=algorithm_specific, 
+                        start_date=datetime.now(),
+                        description=description,
+                        duration=time(0, 2, 45), 
+                        dataset=dataset,
+                        result=image
+                        )
+                    print(experiment)
+                    experiment.save()
+    # Don't have access to the page
+    else:
+        args['message'] = 'You don\'t have access to this page'
+        args['message_type'] = 'error'
+        args['access'] = 0
     return render(request, 'sotsia/experimentation.html', args)
 
 
 @login_required(login_url='/login/')
 def document(request, id):
     args = {}
+    host = "http://127.0.0.1:8000"
 
     report = get_object_or_404(Experiment, pk=id)
-    args['report_id'] = report.id
-    args['report'] = report
-    args['image'] = str(report.result).split("static/",1)[1]
-
+    if report.dataset.author == request.user.username:
+        args['access'] = 1
+        args['report_id'] = report.id
+        args['report'] = report
+        args['image'] = host + str(report.result).split("Research",1)[1]
+    else:
+        args['message'] = 'You don\'t have access to this page'
+        args['message_type'] = 'error'
+        args['access'] = 0
     return render(request, 'sotsia/document.html', args)
+
+
+# defining the function to convert an HTML file to a PDF file
+def html_to_pdf(template_src, context_dict={}):
+     template = get_template(template_src)
+     html  = template.render(context_dict)
+     result = BytesIO()
+     pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+     if not pdf.err:
+         return HttpResponse(result.getvalue(), content_type='application/pdf')
+     return None
+
+
+#@login_required(login_url='/login/')
+def generate_pdf(request, id):
+    args = {}
+    host = "http://127.0.0.1:8000"
+
+    report = get_object_or_404(Experiment, pk=id)
+    args['report'] = report
+    # The path of the image is /static/images/experiments/
+    args['image'] = host + str(report.result).split("Research",1)[1]
+
+    # getting the template
+    pdf = html_to_pdf('sotsia/doc_to_pdf.html', args)
+        
+    # rendering the template
+    return HttpResponse(pdf, content_type='application/pdf')
