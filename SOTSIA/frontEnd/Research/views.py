@@ -69,6 +69,66 @@ def research(request):
     datasets_this_week = DatasetConfiguration.objects.filter(created_at__gte=one_week_ago, created_at__lt=now).count()
     args['datasets_week'] = datasets_this_week
 
+    # Get all the experiments
+    experiments_all = Experiment.objects.all()
+    # Get experiments divided by groups
+    dl_experiments = []
+    ml_experiments = []
+    dm_experiments = []
+    for exp in experiments_all:
+        if exp.algorithm_group == 'Deep Learning':
+            dl_experiments.append(exp)
+        elif exp.algorithm_group == 'Machine Learning':
+            ml_experiments.append(exp)
+        elif exp.algorithm_group == 'Data Mining':
+            dm_experiments.append(exp)
+    
+    total_experiments_grouped = str(len(dl_experiments)) + "," + str(len(ml_experiments))+ "," + str(len(dm_experiments))
+    args['total_experiments_grouped'] = total_experiments_grouped
+
+    # Get Deep Learning experiments grouped by months
+    january = make_aware(datetime.strptime('01/01/22 00:00:00', '%d/%m/%y %H:%M:%S'))
+    february = make_aware(datetime.strptime('01/02/22 00:00:00', '%d/%m/%y %H:%M:%S'))
+    march = make_aware(datetime.strptime('01/03/22 00:00:00', '%d/%m/%y %H:%M:%S'))
+    april = make_aware(datetime.strptime('01/04/22 00:00:00', '%d/%m/%y %H:%M:%S'))
+    may = make_aware(datetime.strptime('01/05/22 00:00:00', '%d/%m/%y %H:%M:%S'))
+    june = make_aware(datetime.strptime('01/06/22 00:00:00', '%d/%m/%y %H:%M:%S'))
+    july = make_aware(datetime.strptime('01/07/22 00:00:00', '%d/%m/%y %H:%M:%S'))
+    august = make_aware(datetime.strptime('01/08/22 00:00:00', '%d/%m/%y %H:%M:%S'))
+    experiments_month = [0, 0, 0, 0, 0, 0, 0, 0]
+    # Iterate and count them
+    for dl in dl_experiments:
+        # Experiments in january
+        if dl.created_at >= january and dl.created_at < february:
+            experiments_month[0] += 1
+        # Experiments in february
+        elif dl.created_at >= february and dl.created_at < march:
+            experiments_month[1] += 1
+        # Experiments in march
+        elif dl.created_at >= march and dl.created_at < april:
+            experiments_month[2] += 1
+        # Experiments in april
+        elif dl.created_at >= april and dl.created_at < may:
+            experiments_month[3] += 1
+        # Experiments in may
+        elif dl.created_at >= may and dl.created_at < june:
+            experiments_month[4] += 1
+        # Experiments in june
+        elif dl.created_at >= june and dl.created_at < july:
+            experiments_month[5] += 1
+        # Experiments in july
+        elif dl.created_at >= july and dl.created_at < august:
+            experiments_month[6] += 1
+        # Experiments in august
+        elif dl.created_at >= august:
+            experiments_month[7] += 1
+
+    exps_month = ""
+    for exp in experiments_month:
+        exps_month += str(exp) + ","
+
+    args['experiments_month'] = exps_month[:-1]
+
     return render(request, 'sotsia/research.html', args)
 
 
