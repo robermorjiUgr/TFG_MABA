@@ -8,11 +8,11 @@
     <form class="sign-form" method="post">
         {% csrf_token %}
         <div class="sign-form-item">
-            <span class="sign-form-label">Username</span>
+            <label class="sign-form-label" for="id_username">Username</label>
             {{ form.username }}
         </div>
         <div class="sign-form-item">
-            <span class="sign-form-label">Password</span>
+            <label class="sign-form-label" for="id_password">Password</label>
             {{ form.password }}
         </div>
         <div class="sign-form-item">

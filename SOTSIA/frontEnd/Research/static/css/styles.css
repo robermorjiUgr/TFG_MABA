@@ -1,6 +1,6 @@
 :root {
     --primary-color: #12192F;
-    --secondary-color: #0088CC;
+    --secondary-color: #007AB8;
     --grey: #666666;
     --light-grey: #EEEEEE;
     --white: #FFFFFF;
@@ -191,7 +191,8 @@ body {
         background-color: var(--primary-color);
     }
 
-    .navbar.responsive-menu .navbar-container .dash-logo .logo-link, .navbar.responsive-menu .navbar-container .toggle-navmenu {
+    .navbar.responsive-menu .navbar-container .dash-logo .logo-link, 
+    .navbar .navbar-container .toggle-navmenu svg {
         color: white;
     }
 
@@ -207,6 +208,13 @@ body {
     .navbar .navbar-container .toggle-navmenu {
         color: var(--primary-color);
         font-size: 1.125rem;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        border: none;
+        cursor: pointer;
+        overflow: hidden;
+        outline: none;
+        color: transparent;
     }
 
     .navbar .navbar-container .menu {
@@ -216,7 +224,7 @@ body {
     .navbar.responsive-menu .navbar-container .menu {
         display: block;
         position: absolute;
-        top: 90px;
+        top: 80px;
         right: 0;
         background-color: var(--primary-color);
         width: fit-content;

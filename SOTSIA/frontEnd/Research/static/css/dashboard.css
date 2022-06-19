@@ -1,7 +1,7 @@
 :root {
     --card-green: #008154;
     --card-red: #AB292C;
-    --card-grey: #868686;
+    --card-grey: #757575;
     --nav-grey: #707070;
 }
 
@@ -679,7 +679,7 @@
         background-color: var(--primary-color);
     }
 
-    .navbar.dashboard.responsive-menu .navbar-container .dash-logo .logo-link, .navbar.dashboard.responsive-menu .navbar-container .toggle-navmenu {
+    .navbar.dashboard.responsive-menu .navbar-container .dash-logo .logo-link, .navbar.dashboard.responsive-menu .navbar-container .toggle-navmenu svg {
         color: var(--secondary-color);
     }
 
@@ -695,6 +695,17 @@
     .navbar.dashboard .navbar-container .toggle-navmenu {
         color: var(--primary-color);
         font-size: 1.125rem;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        border: none;
+        cursor: pointer;
+        overflow: hidden;
+        outline: none;
+        color: transparent;
+    }
+
+    .navbar.dashboard .navbar-container .toggle-navmenu svg {
+        color: var(--primary-color)
     }
 
     .navbar.dashboard .navbar-container .menu, .navbar.dashboard.responsive-menu .navbar-container .menu {
@@ -703,7 +714,7 @@
 
     .navbar.dashboard .navbar-container .dashboard-nav {
         position: absolute;
-        top: 90px;
+        top: 80px;
         bottom: 0;
         left: 0;
         right: 0;

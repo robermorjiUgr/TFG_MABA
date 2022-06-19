@@ -82,6 +82,8 @@
                 inputNode.id = "cbox" + (i+1);
                 inputNode.value = objJson[value][i];
 
+                labelNode.htmlFor = inputNode.id;
+
                 divNode.appendChild(inputNode);
                 divNode.appendChild(labelNode);
                 db_keys_container.appendChild(divNode);

@@ -23,6 +23,7 @@ client = MongoClient("mongodb://localhost")
 @ns_sotsia.doc(description="Get a list with the names of the databases created")
 class get_db_names(Resource):
   def get(self):
+    '''Get a list with the DB names'''
     databases = []
     default_dbs = ['admin', 'local', 'config']
     for db in client.list_database_names():
@@ -37,6 +38,7 @@ class get_db_names(Resource):
 )
 class get_collection_keys(Resource):
   def get(self, database):
+    '''Get a list with the collection keys of a database'''
     meta_keys = []
     try:
       db = client[database]
@@ -56,6 +58,7 @@ class get_collection_keys(Resource):
 )
 class get_database_size(Resource):
   def get(self, database):
+    '''Get the size of a database'''
     size = 0
     try:
       db = client[database]
@@ -73,6 +76,7 @@ class get_database_size(Resource):
 )
 class get_min_max_date(Resource):
   def get(self, database):
+    '''Get the min and max date of the documents inserted in a database'''
     min_date = max_date = 0
     try:
       db = client[database]
@@ -93,6 +97,7 @@ class get_min_max_date(Resource):
 @ns_sotsia.doc(description="Get a list with the database name and its size")
 class get_all_sizes(Resource):
   def get(self):
+    '''Get a list with the DB names and sizes'''
     databases_size = {"db_sizes": [{}]}
     default_dbs = ['admin', 'local', 'config']
     for db_name in client.list_database_names():
@@ -111,6 +116,7 @@ class get_all_sizes(Resource):
 @ns_sotsia.doc(description="Get a list with the database name and its meta keys")
 class get_all_meta_keys(Resource):
   def get(self):
+    '''Get a list with the DB names and meta information'''
     databases_keys = {"meta_keys": [{}]}
     default_dbs = ['admin', 'local', 'config']
     for db_name in client.list_database_names():
@@ -136,7 +142,10 @@ class get_all_meta_keys(Resource):
   }
 )
 class deep_learning_lstm(Resource):
+  @ns_sotsia.response(200, 'Execute LSTM algorithm')
+  @ns_sotsia.response(500, 'Internal Server error')
   def get(self, database):
+    '''Experiment with LSTM (Deep Learning)'''
     from app.lib import lstm, lstm_algorithm
     from datetime import datetime
     result = {"result": ""}
@@ -183,6 +192,7 @@ class deep_learning_lstm(Resource):
 @ns_sotsia.doc(description="Experiment with the XGBoost algorithm")
 class machine_learning_xgboost(Resource):
   def get(self):
+    '''Experiment with XGBoost (Machine Learning)'''
     from pandas import DataFrame
     from sklearn.metrics import mean_squared_error
     try:
@@ -224,6 +234,7 @@ class machine_learning_xgboost(Resource):
 @ns_sotsia.doc(description="Plot the data of the dataset")
 class plot_dataset(Resource):
   def get(self):
+    '''Test how to plot the data in the API'''
     from pandas import DataFrame
     try:
       db = client['ICPE']
@@ -281,6 +292,7 @@ class plot_dataset(Resource):
 )
 class update_meta_collection(Resource):
   def get(self, database):
+    '''Update the meta collection of a database'''
     result = {"result": ""}
     try:
       db = client[database]

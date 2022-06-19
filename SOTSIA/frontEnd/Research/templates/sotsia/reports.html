@@ -37,7 +37,8 @@
 								<td class="td-item">{{ item.duration|date:'H:i:s' }}</td>
 								<td class="td-item experimentation_column"><a href="{{item.id}}" class="algorithm-research-btn">Document</a></td>
 								<td class="td-item delete-checkbox">
-									<input type="checkbox" name="delete" value={{item.id}}>
+									<label for="checkbox_{{item.id}}" style="display:none">.</label>
+									<input id="checkbox_{{item.id}}" type="checkbox" name="delete" value={{item.id}}>
 								</td>
 							</tr>
 						{% endfor %}
