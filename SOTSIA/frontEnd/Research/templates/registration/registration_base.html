@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - SOTSIA{% endblock %}
+
+{% block content %}
+    <section class="sign-in">
+        <div class="sign-box">
+            <h1 class="sign-form-title">{% block heading %}{% endblock %}</h1>
+            {% block content_sign_box %}
+            {% endblock %}
+        </div>
+    </section>
+{% endblock %}

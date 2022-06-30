@@ -1,0 +1,247 @@
+:root {
+    --primary-color: #12192F;
+    --secondary-color: #007AB8;
+    --grey: #666666;
+    --light-grey: #EEEEEE;
+    --white: #FFFFFF;
+}
+
+*{
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+}
+
+h1, h2, h3 {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 2.625rem;
+}
+
+h2 {
+    font-size: 2.25rem;
+}
+
+h3 {
+    font-size: 1.875rem;
+}
+
+body {
+    margin: 0;
+}
+
+.navbar {
+    position: absolute;
+    top: 0;
+    height: 90px;
+    background-color: #69686860;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar-container {
+    max-width: 1500px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.logo {
+    width: 50%;
+}
+
+.logo-title {
+    text-decoration: none;
+    color: var(--light-grey);
+    font-size: 1.375rem;
+    font-weight: bold;
+}
+
+.menu-icon-toggle {
+    display: none;
+}
+
+.menu {
+    max-width: 1000px;
+    width: 50%;
+}
+
+.menu-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu-item {
+    list-style-type: none;
+}
+
+.menu-link {
+    text-decoration: none;
+    color: var(--light-grey);
+    font-size: 1.125rem;
+}
+
+.logo-title:hover, .menu-link:hover {
+    color: var(--white);
+}
+
+.menu-link:hover {
+    border-bottom: 2px solid var(--white);
+    transition: all 0.3s ease;
+}
+
+.sign-in {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: url("/static/images/sign-in.jpg");
+    background-size: 100vw 100vh;
+    background-repeat: no-repeat;
+    object-fit: contain;
+}
+
+.sign-box {
+    padding: 4.625rem;
+    background-color: rgba(0,0,0,0.6);
+    width: 25rem;
+    margin: 7rem 0;
+}
+
+.sign-form-title {
+    font-size: 2.25rem;
+    color: var(--white);
+    font-weight: bold;
+    margin: 0;
+}
+
+.sign-form {
+    margin-top: 1.5rem;
+}
+
+.sign-form-item {
+    display: block;
+    margin-bottom: 0.875rem;
+}
+
+.sign-form-label {
+    font-size: 1.125rem;
+    color: var(--white);
+    margin-bottom: 0.625rem;
+}
+
+.sign-form-item input {
+    width: 100%;
+    height: 2.25rem;
+    border-radius: 10px;
+    background-color: var(--white);
+    border: none;
+    margin-top: 0.5rem;
+}
+
+.sign-form-item:last-child, .sign-form-text:last-child {
+    margin-bottom: 0;
+}
+
+.sign-form-submit {
+    margin-top: 2rem;
+}
+
+.sign-in-btn {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-radius: 10px;
+    font-size: 1.125rem;
+    font-weight: bold;
+    padding: 0.75rem 0;
+    border: none;
+    cursor: pointer;
+}
+
+.password-reset {
+    margin-top: 0.5rem;
+}
+
+.password-reset-link {
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-size: 0.875rem;
+}
+
+.sign-form-text {
+    color: var(--light-grey);
+}
+
+.home-page {
+    padding-top: 100px;
+}
+
+@media ( max-width: 1000px ) {
+    .navbar.responsive-menu {
+        background-color: var(--primary-color);
+    }
+
+    .navbar.responsive-menu .navbar-container .dash-logo .logo-link, 
+    .navbar .navbar-container .toggle-navmenu svg {
+        color: white;
+    }
+
+    .navbar.responsive-menu .navbar-container {
+        display: flex;
+        padding-top: 1.5rem;
+    }
+
+    .navbar .navbar-container .toggle-menu-container {
+        display: block;
+    }
+
+    .navbar .navbar-container .toggle-navmenu {
+        color: var(--primary-color);
+        font-size: 1.125rem;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        border: none;
+        cursor: pointer;
+        overflow: hidden;
+        outline: none;
+        color: transparent;
+    }
+
+    .navbar .navbar-container .menu {
+        display: none;
+    }
+
+    .navbar.responsive-menu .navbar-container .menu {
+        display: block;
+        position: absolute;
+        top: 80px;
+        right: 0;
+        background-color: var(--primary-color);
+        width: fit-content;
+    }
+
+    .navbar.responsive-menu .navbar-container .menu .menu-container {
+        display: block;
+        padding: 0;
+        margin: 0;
+    }
+
+    .navbar.responsive-menu .navbar-container .menu .menu-container .menu-item {
+        padding: 1.5rem 2rem;
+    }
+
+    .navbar.responsive-menu .navbar-container .menu .menu-container .menu-item:not(:last-child) {
+        border-bottom: 1px solid var(--light-grey);
+    }
+
+}

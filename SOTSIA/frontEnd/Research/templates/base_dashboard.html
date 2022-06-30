@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block js_content %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+{% endblock %}
+
+{% block navbar %}
+{% if user.is_authenticated %}
+<nav class="navbar dashboard" id="dashboard-navbar">
+    <div class="navbar-container">
+        <div class="dash-logo">
+            <a href="/" class="logo-link">SoTSIA</a>
+        </div>
+        <div class="toggle-menu-container">
+            <button class="toggle-navmenu" id="toggle-menu">.
+                <i id="menu-icon-bars" class="fas fa-bars"></i>
+                <i id="menu-icon-times" class="fas fa-times hidden"></i>
+            </button>
+        </div>
+        <aside class="dashboard-nav">
+            <div class="dash-logo">
+                <a href="/" class="logo-link">SoTSIA</a>
+            </div>
+            <div class="dash-menu">
+                <ul class="dash-menu-links">
+                    <li class="dash-menu-item {% block dash_item_reports %}{% endblock dash_item_reports %}">
+                        <a href="{% url 'reports' %}" class="dash-link">
+                            <i class="fas fa-folder-open"></i>
+                            <span class="dash-menu-item_text">My Reports</span>
+                        </a>
+                    </li>
+                    <li class="dash-menu-item {% block dash_item_research %}{% endblock dash_item_research %}">
+                        <a href="{% url 'research' %}" class="dash-link">
+                            <i class="fas fa-vial"></i>
+                            <span class="dash-menu-item_text">Research</span>
+                        </a>
+                    </li>
+                    <li class="dash-menu-item {% block dash_item_dataset %}{% endblock dash_item_dataset %}">
+                        <a href="{% url 'dataset' %}" class="dash-link">
+                            <i class="fas fa-database"></i>
+                            <span class="dash-menu-item_text">Dataset</span>
+                        </a>
+                    </li>
+                    <li class="dash-menu-item {% block dash_item_deep_learning %}{% endblock dash_item_deep_learning %}">
+                        <a href="{% url 'deep-learning' %}" class="dash-link">
+                            <i class="fas fa-square"></i>
+                            <span class="dash-menu-item_text">Deep Learning</span>
+                        </a>
+                    </li>
+                    <!-- <li class="dash-menu-item {% block dash_item_machine_learning %}{% endblock dash_item_machine_learning %}">
+                        <a href="{% url 'machine-learning' %}" class="dash-link">
+                            <i class="fas fa-square"></i>
+                            <span class="dash-menu-item_text">Machine Learning</span>
+                        </a>
+                    </li>
+                    <li class="dash-menu-item {% block dash_item_data_mining %}{% endblock dash_item_data_mining %}">
+                        <a href="{% url 'data-mining' %}" class="dash-link">
+                            <i class="fas fa-square"></i>
+                            <span class="dash-menu-item_text">Data Mining</span>
+                        </a>
+                    </li> -->
+                </ul>
+                <div class="dash-sign-out">
+                    <a href="{% url 'logout' %}" class="dash-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="dash-menu-item_text">Sign Out</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </div>
+</nav>
+<script>
+    $('#toggle-menu').on("click", function() {
+        var bars = document.getElementById("menu-icon-bars").classList;
+        var times = document.getElementById("menu-icon-times").classList;
+        var dash_nav = document.getElementById("dashboard-navbar").classList;
+        bars.toggle('hidden');
+
+        if(bars.contains('hidden')){
+            dash_nav.add('responsive-menu');
+            times.remove('hidden');
+        }
+        else {
+            dash_nav.remove('responsive-menu');
+            times.add('hidden');
+        }
+    });
+</script>
+{% endif %}
+{% endblock navbar %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <main class="dashboard-content">
+            {% block content_dash %}{% endblock %}
+        </main>
+    {% else %}
+        <main class="dashboard-content">
+            <h1>Error</h1>
+            <p>You must <a href="{% url 'login' %}" class="dash-link">sign in</a> to be able to see the Testing Area</p>
+        </main>
+    {% endif %}
+{% endblock %}

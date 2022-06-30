@@ -1,0 +1,5 @@
+Django==4.0.2
+IPython
+ipdb
+requests
+celery

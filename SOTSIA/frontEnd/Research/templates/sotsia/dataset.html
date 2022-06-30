@@ -1,0 +1,132 @@
+{% extends "base_dashboard.html" %}
+
+{% load format %}
+
+{% block title %}Dataset{% endblock %}
+
+{% block dash_item_dataset %}active{% endblock dash_item_dataset %}
+
+{% block content_dash %}
+    <section class="dataset-page">
+        {% if message %}
+            <div class="dataset-message">
+                {% if message_type == 'error' %}
+                    <p><i class="fas fa-exclamation-circle"></i> {{ message }}</p>
+                {% elif message_type == 'correct' %}
+                    <p><i class="fas fa-check-circle"></i> {{ message }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+        <h1>Configure Dataset</h1>
+        <form action="#" method="post" class="dataset-form">
+            {% csrf_token %}
+            <div class="database-form">
+                <h2>Database</h2>
+                <select id="select-database" class="db-selector" name="select_database" required>
+                    {% for item in databases %}
+                        <option class="db-selector-item" value="{{ item }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="dates-form">
+                <h2>Time Interval</h2>
+                <div class="dates-form-inputs">
+                    <div class="date-input">
+                        <label for="start-date-input">Start Date</label>
+                        <input id="start-date-input" class="dataset-form-time" type="date" name="start_date" required>
+                    </div>
+                    <div class="date-input">
+                        <label for="end-date-input">End Date</label>
+                        <input id="end-date-input" class="dataset-form-time" type="date" name="end_date" required>
+                    </div>
+                </div>
+            </div>
+            <div class="types-form">
+                <h2>Types</h2>
+                <div class="types-labels" id="database-keys"></div>
+            </div>
+            <button class="submit-btn" type="submit">Create Dataset</button>
+        </form>
+        
+    </section>
+    <script>
+        // Change the database information
+        let select = document.getElementById("select-database");
+        let db_keys_container = document.getElementById("database-keys");
+        let start_date = document.getElementById("start-date-input");
+        let end_date = document.getElementById("end-date-input");
+        var obj = "{{ db_keys | safe }}";
+        // We have to convert it to a String object and change the format so JSON can parse it -> '{"field": "value"}'
+        obj = obj.toString();
+        obj = obj.replace(/'/g, '"');
+        var objJson = JSON.parse(obj);
+
+        //When loading the page, the capacity must be written with the first database
+        window.onload = function() {
+            value = select.value;
+            let divNode, labelNode, inputNode;
+            while (db_keys_container.firstChild) {
+                db_keys_container.removeChild(db_keys_container.firstChild);
+            }
+            for (let i = 0; i < objJson[value].length; i++) {
+                divNode = document.createElement("div");
+                divNode.className = "checkbox-container";
+
+                labelNode = document.createElement("label");
+                labelNode.className = "types-label-item";
+                labelNode.innerText = objJson[value][i];
+
+                inputNode = document.createElement("input");
+                inputNode.type = "checkbox";
+                inputNode.name = "types";
+                inputNode.id = "cbox" + (i+1);
+                inputNode.value = objJson[value][i];
+
+                labelNode.htmlFor = inputNode.id;
+
+                divNode.appendChild(inputNode);
+                divNode.appendChild(labelNode);
+                db_keys_container.appendChild(divNode);
+            }
+            // We take the min and max dates in the database to disable all the dates that go out of range
+            start_date.min = end_date.min = start_date.value = "{{ min_date | safe }}";
+            start_date.max = end_date.max = end_date.value = "{{ max_date | safe }}";
+            // Correct format --> "2022-05-14"
+        };
+
+        select.addEventListener("change", (e) => {
+            value = select.value;
+            let divNode, labelNode, inputNode;
+            while (db_keys_container.firstChild) {
+                db_keys_container.removeChild(db_keys_container.firstChild);
+            }
+            for (let i = 0; i < objJson[value].length; i++) {
+                divNode = document.createElement("div");
+                divNode.className = "checkbox-container";
+
+                labelNode = document.createElement("label");
+                labelNode.className = "types-label-item";
+                labelNode.innerText = objJson[value][i];
+
+                inputNode = document.createElement("input");
+                inputNode.type = "checkbox";
+                inputNode.name = "types";
+                inputNode.id = "cbox" + (i+1);
+                inputNode.value = objJson[value][i];
+
+                divNode.appendChild(inputNode);
+                divNode.appendChild(labelNode);
+                db_keys_container.appendChild(divNode);
+            }
+        });
+
+        $("#form-id").submit(function(){
+            if(invalid){
+                //Suppress form submit
+                return false;
+            }else{
+                return true;
+            }
+        });
+    </script>
+{% endblock %}

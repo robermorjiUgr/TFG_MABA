@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Enviorentment 
+SOTSIA/backEnd/envApiRest/
+SOTSIA/frontEnd/envSOTSIA/

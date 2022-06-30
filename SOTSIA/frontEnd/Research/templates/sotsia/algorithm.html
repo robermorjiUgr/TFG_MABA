@@ -1,0 +1,104 @@
+{% extends "base_dashboard.html" %}
+
+{% load format %}
+
+{% block title %}{{ algorithm }}{% endblock %}
+
+{% block dash_item_deep_learning %}
+	{% if algorithm == "Deep Learning" %}active{% endif %}
+{% endblock dash_item_deep_learning %}
+
+{% block dash_item_data_mining %}
+	{% if algorithm == "Data Mining" %}active{% endif %}
+{% endblock dash_item_data_mining %}
+
+{% block dash_item_machine_learning %}
+	{% if algorithm == "Machine Learning" %}active{% endif %}
+{% endblock dash_item_machine_learning %}
+
+{% block content_dash %}
+  	<section class="algorithm-page">
+		<h1>{{ algorithm }} Algorithm</h1>
+		<div class="algorithm-table">
+			<form id="delete-reports" method="POST" action="#delete" enctype="multipart/form-data">
+				{% csrf_token %}
+				<input class="btn-primary" type="submit" value="Delete selected" 
+					onclick="return confirm('Do you really want to delete the reports selected?');"
+				/>
+				<table id="algorithm-table" class="table table-striped">
+					<thead>
+						<tr class="table-header">
+							<th class="th-item dataset_column">Dataset</th>
+							<th class="th-item types_column">Types Selected</th>
+							<th class="th-item database_column">Database</th>
+							<th class="th-item dates_column">Start Date</th>
+							<th class="th-item dates_column">End Date</th>
+							<th class="th-item experimentation_column">Testing</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in datasets %}
+							<tr class="table-row">
+								<td class="td-item dataset_column">{{ forloop.counter }}</td>
+								<td class="td-item types_column td-overflow">{{ item.types_selected }}</td>
+								<td class="td-item database_column">{{ item.database }}</td>
+								<td class="td-item dates_column">{{ item.start_date|date:"d M, Y" }}</td>
+								<td class="td-item dates_column">{{ item.end_date|date:"d M, Y" }}</td>
+								<td class="td-item experimentation_column">
+									<a href="experimentation?dataset-id={{item.id}}" class="algorithm-research-btn">Start Experiment</a>
+								</td>
+								<td class="td-item delete-checkbox">
+									<label for="checkbox_{{item.id}}" style="display:none">.</label>
+									<input id="checkbox_{{item.id}}" type="checkbox" name="delete" value={{item.id}}>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</form>
+			<p id="select-result"></p>
+		</div>
+  	</section>
+
+	<script>
+		$(document).ready(function () {
+			var rows_number = $('#algorithm-table .table-row').length
+			
+			$('#algorithm-table').DataTable({
+				"columnDefs": [
+					{
+						"targets": [ 2 ],
+						"visible": false,
+						"searchable": true
+					}
+				]
+			} );
+			$('#algorithm-table').removeAttr("style");
+			$('#algorithm-table_filter').addClass('hidden');
+			$('#algorithm-table_length').remove();
+			$("#algorithm-table_info").addClass('table-paginate-info');
+			$("#algorithm-table_paginate").addClass('table-paginate-numbers');
+
+			$('<div id="algorithm-table_paginate-wrapper" class="table_paginate-wrapper"></div>').appendTo('#algorithm-table_wrapper')
+			$('#algorithm-table_paginate-wrapper').append($("#algorithm-table_info"));
+			$('#algorithm-table_paginate-wrapper').append($("#algorithm-table_paginate"));
+
+			if(rows_number <= 10) {
+				$("#algorithm-table_info").remove();
+				$("#algorithm-table_paginate").remove();
+			}
+
+		// 	$('.table-row').addClass('hidden');
+
+		// 	let select = document.getElementById("select-database");
+		// 	select.addEventListener("change", (e) => {
+		// 		value = select.value;
+		// 		document.getElementById('select-result').innerHTML = value;
+		// 		let rows = document.getElementsByClassName(value);
+		// 		[].forEach.call(rows, function (row) {
+		// 			row.classList.remove("hidden");
+		// 		});
+        // });
+		});
+	</script>
+{% endblock %}

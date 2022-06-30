@@ -1,0 +1,71 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block dash_item_reports %}active{% endblock dash_item_reports %}
+
+{% block content_dash %}
+  	<section class="reports-page">
+		<h1>My Reports</h1>
+		<div class="reports-info">
+			<p>List of all the reports of the experiments carried out.</p>
+		</div>
+		<div class="reports-table">
+			<form id="delete-reports" method="POST" action="#delete" enctype="multipart/form-data">
+				{% csrf_token %}
+				<input class="btn-primary" type="submit" value="Delete selected" 
+					onclick="return confirm('Do you really want to delete the reports selected?');"
+				/>
+				<table id="my-reports-table" class="table table-striped">
+					<thead>
+						<tr class="table-header">
+							<th class="th-item database_column">Database</th>
+							<th class="th-item database_column">Algorithm</th>
+							<th class="th-item description_column">Description</th>
+							<th class="th-item dates_column">Start Date</th>
+							<th class="th-item dates_column">Duration</th>
+							<th class="th-item">Report</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in experiments %}
+							<tr class="table-row">
+								<td class="td-item database_column">{{ item.dataset.database }}</td>
+								<td class="td-item database_column">{{ item.algorithm_group }}</td>
+								<td class="td-item description_column td-overflow">{{ item.description }}</td>
+								<td class="td-item">{{ item.start_date|date:"d M, Y" }}</td>
+								<td class="td-item">{{ item.duration|date:'H:i:s' }}</td>
+								<td class="td-item experimentation_column"><a href="{{item.id}}" class="algorithm-research-btn">Document</a></td>
+								<td class="td-item delete-checkbox">
+									<label for="checkbox_{{item.id}}" style="display:none">.</label>
+									<input id="checkbox_{{item.id}}" type="checkbox" name="delete" value={{item.id}}>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</form>
+		</div>
+  	</section>
+
+	<script>
+		$(document).ready(function () {
+			var rows_number = $('#my-reports-table .table-row').length
+			
+			$('#my-reports-table').DataTable();
+			$('#my-reports-table_filter').remove();
+			$('#my-reports-table_length').remove();
+			$("#my-reports-table_info").addClass('table-paginate-info');
+			$("#my-reports-table_paginate").addClass('table-paginate-numbers');
+
+			$('<div id="my-reports-table_paginate-wrapper" class="table_paginate-wrapper"></div>').appendTo('#my-reports-table_wrapper')
+			$('#my-reports-table_paginate-wrapper').append($("#my-reports-table_info"));
+			$('#my-reports-table_paginate-wrapper').append($("#my-reports-table_paginate"));
+
+			if(rows_number <= 10) {
+				$("#my-reports-table_info").remove();
+				$("#my-reports-table_paginate").remove();
+			}
+		});
+	</script>
+{% endblock %}
