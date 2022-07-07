@@ -3,3 +3,4 @@ IPython
 ipdb
 requests
 celery
+xhtml2pdf

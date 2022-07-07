@@ -9,4 +9,5 @@ plotly
 pandas
 xgboost
 tensorflow
-io
+matplotlib
+flask_pymongo
